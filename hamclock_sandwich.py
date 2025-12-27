@@ -65,13 +65,19 @@ class HamClockLauncher(wx.Frame):
         # Selection section
         selection_box = wx.StaticBoxSizer(wx.VERTICAL, panel, "Select HamClock Version")
 
-        self.radio_buttons = []
-        for binary in self.binaries:
-            rb = wx.RadioButton(selection_box.GetStaticBox(), label=binary,
-                                style=wx.RB_GROUP if binary == self.binaries[0] else 0)
-            self.radio_buttons.append(rb)
-            selection_box.Add(rb, 0, wx.ALL, 5)
+        # Create a 2x2 grid for radio buttons
+        grid_sizer = wx.GridSizer(rows=2, cols=2, hgap=10, vgap=10)
 
+        self.radio_buttons = []
+        for i, binary in enumerate(self.binaries):
+            rb = wx.RadioButton(selection_box.GetStaticBox(), label=binary,
+                                style=wx.RB_GROUP if i == 0 else 0)
+            rb.SetValue(False)  # Start with no selection
+            rb.Bind(wx.EVT_RADIOBUTTON, self.on_radio_selected)
+            self.radio_buttons.append(rb)
+            grid_sizer.Add(rb, 0, wx.ALL, 5)
+
+        selection_box.Add(grid_sizer, 0, wx.ALL | wx.EXPAND, 5)
         main_sizer.Add(selection_box, 0, wx.ALL | wx.EXPAND, 10)
 
         # Control buttons
@@ -79,6 +85,7 @@ class HamClockLauncher(wx.Frame):
 
         self.start_btn = wx.Button(panel, label='Start HamClock')
         self.start_btn.Bind(wx.EVT_BUTTON, self.on_start)
+        self.start_btn.Enable(False)  # Disabled until version is selected
         button_sizer.Add(self.start_btn, 0, wx.ALL, 5)
 
         self.stop_btn = wx.Button(panel, label='Stop HamClock')
@@ -101,7 +108,7 @@ class HamClockLauncher(wx.Frame):
 
         self.output_ctrl = wx.TextCtrl(output_box.GetStaticBox(),
                                        style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_WORDWRAP)
-        font = wx.Font(9, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+        font = wx.Font(10, wx.FONTFAMILY_TELETYPE, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
         self.output_ctrl.SetFont(font)
 
         output_box.Add(self.output_ctrl, 1, wx.ALL | wx.EXPAND, 5)
@@ -114,7 +121,13 @@ class HamClockLauncher(wx.Frame):
         for i, rb in enumerate(self.radio_buttons):
             if rb.GetValue():
                 return self.binaries[i]
-        return self.binaries[0]
+        return None
+
+    def on_radio_selected(self, event):
+        """Handle radio button selection"""
+        # Enable Start button when a version is selected
+        if not self.process or self.process.poll() is not None:
+            self.start_btn.Enable(True)
 
     def on_start(self, event):
         """Start the hamclock process"""
@@ -123,6 +136,10 @@ class HamClockLauncher(wx.Frame):
             return
 
         binary_name = self.get_selected_binary()
+        if binary_name is None:
+            wx.MessageBox('Please select a HamClock version first!', 'Warning', wx.OK | wx.ICON_WARNING)
+            return
+
         binary_path = os.path.join('hamclock_bin', binary_name)
 
         # Check if binary exists
