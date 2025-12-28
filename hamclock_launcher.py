@@ -46,6 +46,9 @@ class HamClockLauncher(wx.Frame):
         """Create the menu bar"""
         menu_bar = wx.MenuBar()
 
+        # Bind the macOS Quit menu item (automatically added by macOS)
+        self.Bind(wx.EVT_MENU, self.on_close, id=wx.ID_EXIT)
+
         # Edit menu
         edit_menu = wx.Menu()
 
