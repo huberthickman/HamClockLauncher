@@ -41,6 +41,7 @@ if sys.platform == 'darwin':
 
     print(Plist)
     OPTIONS = {'argv_emulation': False,
+               'iconfile': 'hamclock_icons.icns',
                'resources': ['hamclock_bin'],
                              #'cacert.pem'],
                'plist': Plist,
