@@ -420,10 +420,16 @@ SOFTWARE."""
 
 
 def main():
-    app = wx.App()
-    frame = HamClockLauncher()
-    frame.Show()
+    app = HamClockApp()
     app.MainLoop()
+
+
+class HamClockApp(wx.App):
+    def OnInit(self):
+        self.SetAppName("HamClockLauncher")
+        frame = HamClockLauncher()
+        frame.Show()
+        return True
 
 
 if __name__ == '__main__':
