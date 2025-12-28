@@ -17,7 +17,7 @@ version_string = "3.1.1"
 # Modify the build_info text file to have the current build date, number and correct version
 #
 
-APP = ['hamclock_sandwich.py']
+APP = ['hamclock_launcher.py']
 
 if sys.platform == 'darwin':
     import py2app.recipes
@@ -34,8 +34,8 @@ if sys.platform == 'darwin':
     py2app.recipes.PIL = PIL_recipe()
 
     Plist = dict(
-
-        CFBundleGetInfoString='HamClock Wrapper',
+        CFBundleName='HamClockLauncher',
+        CFBundleGetInfoString='HamClockLauncher',
         CFBundleShortVersionString='0.1.0',
         )
 
@@ -48,6 +48,8 @@ if sys.platform == 'darwin':
                             'packaging.specifiers', 'packaging.requirements', 'appdirs', 'requests', 'OpenSSL',
                             'pyasn1', 'certifi', 'ndg-httpsclient', 'mcpi'],
                'packages': ['wx']
+              # 'codesign_entitlements': 'entitlements.plist'
+
                }
 
     setup(
