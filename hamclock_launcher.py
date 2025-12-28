@@ -63,6 +63,11 @@ class HamClockLauncher(wx.Frame):
         # Help menu
         help_menu = wx.Menu()
 
+        user_guide_item = help_menu.Append(wx.ID_ANY, 'HamClock &User Guide', 'Open HamClock User Guide PDF')
+        self.Bind(wx.EVT_MENU, self.on_user_guide, user_guide_item)
+
+        help_menu.AppendSeparator()
+
         about_item = help_menu.Append(wx.ID_ABOUT, '&About', 'About HamClock Launcher')
         self.Bind(wx.EVT_MENU, self.on_about, about_item)
 
@@ -231,6 +236,14 @@ class HamClockLauncher(wx.Frame):
     def on_select_all(self, event):
         """Select all text in output window"""
         self.output_ctrl.SetSelection(-1, -1)
+
+    def on_user_guide(self, event):
+        """Open HamClock User Guide in browser"""
+        url = "https://www.clearskyinstitute.com/ham/HamClock/HamClockKey.pdf"
+        try:
+            webbrowser.open(url)
+        except Exception as e:
+            wx.MessageBox(f'Error opening user guide: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
 
     def on_about(self, event):
         """Display About dialog"""
