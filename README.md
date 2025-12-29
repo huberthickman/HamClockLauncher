@@ -1,6 +1,6 @@
 # HamClock Launcher
 
-A wxPython-based GUI launcher for [HamClock](https://www.clearskyinstitute.com/ham/HamClock/), providing an easy-to-use interface for running and monitoring HamClock web applications.  It is distributed as a self containted .app, require no installation of any software to use the HamClock.
+A wxPython-based GUI launcher for [HamClock](https://www.clearskyinstitute.com/ham/HamClock/), providing an easy-to-use interface for running and monitoring HamClock web applications.  It is distributed as a self-contained .app, this requiring no installation of any software to use the HamClock.
 
 ![HamClockLauncher](readme_images/HamClockLauncher.png)
 
