@@ -44,12 +44,12 @@ for i in range(0,3):
         #print(path)
         if path.suffix in EXTENSIONS:
             print('NEED TO SIGN due suffix ', path)
-            ret = subprocess.run([arch+str +'codesign', '--force' ,'--options', 'runtime','--timestamp', '--entitlements', 'entitlements.plist', '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
+            ret = subprocess.run([arch_str +'codesign', '--force' ,'--options', 'runtime','--timestamp', '--entitlements', 'entitlements.plist', '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
             print(ret)
         elif (os.access(str(path), os.X_OK) and os.path.isfile(str(path))):
             print("NEED TO SIGN -- executable ",path)
             ret = subprocess.run(
-                [arch+str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist','--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'),
+                [arch_str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist','--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'),
                  str(path)], capture_output=True)
             print(ret)
 
@@ -60,7 +60,7 @@ for i in range(0,2):
         #print(path)
         if path.name == 'Python' or path.name == os.getenv('APP_EXECUTABLE'):
             ret = subprocess.run(
-                [arch+str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist',
+                [arch_str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist',
                  '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
             print(ret)
 
@@ -73,7 +73,7 @@ for path in things_to_sign:
     if path.name == os.getenv('APP_EXECUTABLE')+'.app':
         print("==== signing app dir at", str(path))
         ret = subprocess.run(
-                    [arch+str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist',
+                    [arch_str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist',
                      '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
         print(ret)
 
