@@ -5,6 +5,18 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+#
+# This script will sign all the executables, libraries, etc. needed to prepare for submission to the Apple Notary service.
+#
+
+# There are some adhoc looking bits here, but I have found looping through and signing everything multiple times takes are care of
+# signing dependency ordering issues.
+#
+# the next pass signs the Python executable and the app launcher executable.
+#
+# The last thing signed is the .app directory itself
+#
+
 parser = argparse.ArgumentParser(description='Sign all the required files in the app directory')
 parser.add_argument('--directory', action='store', type=str, required=True)
 args = parser.parse_args()
