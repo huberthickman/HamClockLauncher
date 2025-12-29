@@ -31,9 +31,22 @@ print(p)
 things_to_sign = p.glob('**/*')
 
 if args.arch is not None and args.arch == 'x86_64':
-    arch_str = 'arch -x86_64 '
+    arch_str = '/usr/bin/arch -x86_64 '
 else:
     arch_str = ''
+
+def sign_files(file_to_sign, arch_str):
+    full_path_obj = file_to_sign.resolve()
+
+    # Convert the Path object to a string for standard use
+    full_path_str = str(full_path_obj)
+
+    # Get the filename with its extension
+    filename_with_ext = full_path_obj.name
+    command= arch_str + 'codesign --force --options runtime --timestamp --entitlements entitlements.plist --verbose --sign ' + "'"+os.getenv('DEV_SIGNING_NAME')+"'" + ' ' + full_path_str
+    print(command)
+    ret = subprocess.run(command, shell=True, capture_output=True)
+    print(ret)
 
 
 #
@@ -41,39 +54,27 @@ else:
 #
 for i in range(0,3):
     for path in things_to_sign:
-        #print(path)
         if path.suffix in EXTENSIONS:
             print('NEED TO SIGN due suffix ', path)
-            ret = subprocess.run([arch_str +'codesign', '--force' ,'--options', 'runtime','--timestamp', '--entitlements', 'entitlements.plist', '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
-            print(ret)
+            sign_files(path, arch_str)
         elif (os.access(str(path), os.X_OK) and os.path.isfile(str(path))):
             print("NEED TO SIGN -- executable ",path)
-            ret = subprocess.run(
-                [arch_str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist','--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'),
-                 str(path)], capture_output=True)
-            print(ret)
+            sign_files(path, arch_str)
 
 things_to_sign = p.glob('**/*')
 
 for i in range(0,2):
     for path in things_to_sign:
-        #print(path)
         if path.name == 'Python' or path.name == os.getenv('APP_EXECUTABLE'):
-            ret = subprocess.run(
-                [arch_str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist',
-                 '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
-            print(ret)
+            sign_files(path, arch_str)
 
 things_to_sign = p.glob('**/*')
 
 print(".")
 #sign the app too last
 for path in things_to_sign:
-    print(path)
     if path.name == os.getenv('APP_EXECUTABLE')+'.app':
         print("==== signing app dir at", str(path))
-        ret = subprocess.run(
-                    [arch_str +'codesign', '--force', '--options', 'runtime', '--timestamp', '--entitlements', 'entitlements.plist',
-                     '--verbose', '--sign', os.getenv('DEV_SIGNING_NAME'), str(path)], capture_output=True)
-        print(ret)
+        sign_files(path, arch_str)
+
 
