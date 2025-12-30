@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HamClock Launcher - Easy GUI for HamClock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .download-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .download-section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .download-btn svg {
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .content {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .content h2 {
+            color: #667eea;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e8eaf6;
+        }
+
+        .content h2:first-child {
+            margin-top: 0;
+        }
+
+        .content h3 {
+            color: #764ba2;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .content ul, .content ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content code {
+            background: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .content pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-box h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .github-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .github-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .github-link a:hover {
+            text-decoration: underline;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HamClock Launcher</h1>
+        <p>A wxPython-based GUI launcher for HamClock on Macs</p>
+    </div>
+
+    <div class="container">
+        <div class="screenshot-section">
+            <img src="readme_images/HamClockLauncher.png" alt="HamClock Launcher Screenshot" style="width: 100%; max-width: 900px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 2rem;">
+        </div>
+
+        <div class="download-section">
+            <h2>Download <span class="version-badge">v0.2</span></h2>
+            <div class="download-buttons">
+                <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_0.2/HamClockLauncher.dmg" class="download-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download for Apple Silicon (M1/M2/M3)
+                </a>
+                <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_0.2/HamClockLauncherIntel.dmg" class="download-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download for Intel Macs
+                </a>
+            </div>
+            <div class="note">
+                <strong>Note:</strong> Choose the version that matches your Mac's processor. Not sure which one? Click the Apple menu → About This Mac to check your processor type.
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>Overview</h2>
+            <p>HamClock Launcher is a cross-platform desktop application that simplifies launching and managing HamClock instances. It captures and displays HamClock's output in real-time, making it easy to monitor the application's status and debug any issues.</p>
+
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature-box">
+                    <h4>📺 Multiple Resolutions</h4>
+                    <p>Choose from 800x480, 1600x960, 2400x1440, or 3200x1920</p>
+                </div>
+                <div class="feature-box">
+                    <h4>📊 Real-time Monitoring</h4>
+                    <p>View HamClock's output as it runs</p>
+                </div>
+                <div class="feature-box">
+                    <h4>🌐 Browser Integration</h4>
+                    <p>One-click browser launch</p>
+                </div>
+                <div class="feature-box">
+                    <h4>🔒 Safe Shutdown</h4>
+                    <p>Prompts before closing if running</p>
+                </div>
+                <div class="feature-box">
+                    <h4>📋 Output Management</h4>
+                    <p>Copy, select all, and auto-limiting</p>
+                </div>
+                <div class="feature-box">
+                    <h4>📚 Help Resources</h4>
+                    <p>Quick access to user guide</p>
+                </div>
+            </div>
+
+            <h2>Requirements</h2>
+            <ul>
+                <li>macOS 10.14 or higher</li>
+                <li>That's it! Everything else is included in the DMG</li>
+            </ul>
+
+            <h2>Installation</h2>
+            <h3>Using the DMG Installer (Recommended for macOS)</h3>
+            <ol>
+                <li>Download the appropriate DMG file for your Mac (see download buttons above)</li>
+                <li>Open the DMG file</li>
+                <li>Drag HamClockLauncher to your Applications folder</li>
+                <li>Launch the application - HamClock binaries are already included!</li>
+            </ol>
+
+            <div class="note">
+                <strong>✨ DMG files include all HamClock binaries</strong> - No additional downloads needed! The DMG installer includes all four HamClock versions (800x480, 1600x960, 2400x1440, and 3200x1920) ready to use.
+            </div>
+
+            <h2>Usage</h2>
+            <ol>
+                <li><strong>Launch the Application</strong>: Open HamClockLauncher from your Applications folder (or run the Python script)</li>
+                <li><strong>Select HamClock Version</strong>: Choose your preferred display resolution from the radio buttons</li>
+                <li><strong>Start HamClock</strong>: Click "Start HamClock" button</li>
+                <li><strong>Open in Browser</strong>: Click "Open in Browser" to view HamClock at <code>http://localhost:8081/live.html</code></li>
+                <li><strong>Stop HamClock</strong>: Click "Stop HamClock" when finished</li>
+            </ol>
+
+            <h2>Menu Options</h2>
+            <h3>Edit Menu</h3>
+            <ul>
+                <li><strong>Copy (Ctrl+C)</strong>: Copy selected text from the output window</li>
+                <li><strong>Select All (Ctrl+A)</strong>: Select all text in the output window</li>
+            </ul>
+
+            <h3>Help Menu</h3>
+            <ul>
+                <li><strong>HamClock User Guide</strong>: Opens the official HamClock user guide PDF</li>
+                <li><strong>About</strong>: View application and license information</li>
+            </ul>
+
+            <h2>Known Issues</h2>
+            <h3>macOS TSM Warnings</h3>
+            <p>When launching HamClock on macOS, you may see warnings like:</p>
+            <pre><code>TSMSendMessageToUIServer: CFMessagePortSendRequest FAILED(-1) to send to port com.apple.tsm.uiserver</code></pre>
+            <p>These warnings are harmless and related to macOS's Text Services Manager. They do not affect HamClock's functionality and can be safely ignored.</p>
+
+            <h2>License</h2>
+            <p>This project is licensed under the MIT License.</p>
+            <p>Copyright (c) 2025 Hubert Hickman</p>
+
+            <h2>About HamClock</h2>
+            <p>HamClock is developed by Elwood Downey and is available at:<br>
+            <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">https://www.clearskyinstitute.com/ham/HamClock/</a></p>
+            <p>HamClock is licensed under the MIT License.</p>
+
+            <h2>Author</h2>
+            <p><strong>Hubert Hickman</strong><br>
+            Email: <a href="mailto:hubert.hickman@gmail.com">hubert.hickman@gmail.com</a></p>
+
+            <div class="github-link">
+                <a href="https://github.com/huberthickman/HamClockLauncher" target="_blank">
+                    View on GitHub →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built with ❤️ using <a href="https://www.wxpython.org/" target="_blank">wxPython</a></p>
+        <p>HamClock by <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">Elwood Downey</a></p>
+    </footer>
+</body>
+</html>
