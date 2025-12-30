@@ -1,6 +1,6 @@
 # HamClock Launcher
 
-A wxPython-based GUI launcher for [HamClock](https://www.clearskyinstitute.com/ham/HamClock/), providing an easy-to-use interface for running and monitoring HamClock web applications.  It is distributed as a self-contained .app, this requiring no installation of any software to use the HamClock.
+A wxPython-based GUI launcher for [HamClock](https://www.clearskyinstitute.com/ham/HamClock/), providing an easy-to-use interface for running and monitoring HamClock web applications.  It is distributed as a self-contained .app, thus requiring no installation of any software to use the HamClock.
 
 ![HamClockLauncher](readme_images/HamClockLauncher.png)
 
@@ -62,5 +62,5 @@ HamClock is licensed under the MIT License. See the LICENSE file in the `hamcloc
 #
 ## Acknowledgments
 
-- Thanks to Elwood Downey for creating the HamClock software - and to having it available to the amateur radio community.  
+- Thanks to Elwood Downey for creating the HamClock software - and for having it available to the amateur radio community.  
 - HamClockLauncher uses the cross-platform GUI library [wxPython](https://www.wxpython.org/)
