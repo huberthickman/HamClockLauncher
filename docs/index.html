@@ -326,7 +326,11 @@
             <p>When launching HamClock on macOS, you may see warnings like:</p>
             <pre><code>TSMSendMessageToUIServer: CFMessagePortSendRequest FAILED(-1) to send to port com.apple.tsm.uiserver</code></pre>
             <p>These warnings are harmless and related to macOS's Text Services Manager. They do not affect HamClock's functionality and can be safely ignored.</p>
-
+            <h3>Mac airport command missing or deprecated</h3>
+            <p>On newer version of macos, the airport command is missing or deprecated.  This command is used be HamClock to get the WiFi signal strength.  These
+            messages are informational, and HamClock does not report WifI signal strength in its display.  The messages look like :</p>
+            <pre><code>sh: / System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport: No such file or directory </code></pre>
+            <p>I am working on a workaround or fix.  HamClock still works fine, but will not report WiFi signal strength in the console.</p>
             <h2>License</h2>
             <p>This project is licensed under the MIT License.</p>
             <p>Copyright (c) 2025 Hubert Hickman</p>
@@ -349,7 +353,7 @@
     </div>
 
     <footer>
-        <p>Built with ❤️ using <a href="https://www.wxpython.org/" target="_blank">wxPython</a></p>
+        <p>Built using <a href="https://www.wxpython.org/" target="_blank">wxPython</a></p>
         <p>HamClock by <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">Elwood Downey</a></p>
     </footer>
 </body>
