@@ -9,8 +9,9 @@ load_dotenv()
 # This script will sign all the executables, libraries, etc. needed to prepare for submission to the Apple Notary service.
 #
 
-# There are some adhoc looking bits here, but I have found looping through and signing everything multiple times takes are care of
-# signing dependency ordering issues.
+# There are some adhoc looking bits here, but I have found looping through and signing everything multiple times takes  care of
+# signing dependency ordering issues - if you are including extra executables and libraries, these
+# ordering problems do exist.
 #
 # the next pass signs the Python executable and the app launcher executable.
 #
