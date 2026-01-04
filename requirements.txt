@@ -1,0 +1,9 @@
+altgraph==0.17.5
+dotenv==0.9.9
+macholib==1.16.4
+modulegraph==0.19.7
+packaging==25.0
+py2app==0.28.9
+python-dotenv==1.2.1
+setuptools==80.9.0
+wxPython==4.2.4
