@@ -11,12 +11,12 @@ xcrun stapler staple "HamClockLauncher.app"
 # xcrun notarytool log  <log_id >--keychain-profile "your_keychain_key" output.log
 
 cd ..
-rm HamClockLauncherIntel.dmg
+rm HamClockLauncher.dmg
 ln -s /Applications ./dist/
-hdiutil create HamClockLauncherIntel.dmg -volname HamClockLauncherIntel -srcfolder ./dist/
-xcrun notarytool submit HamClockLauncherIntel.dmg --keychain-profile "your_keychain_key" --wait
+hdiutil create HamClockLauncher.dmg -volname HamClockLauncher -srcfolder ./dist/
+xcrun notarytool submit HamClockLauncher.dmg --keychain-profile "your_keychain_key" --wait
 
-xcrun stapler staple "HamClockLauncherIntel.dmg"
+xcrun stapler staple "HamClockLauncher.dmg"
 
 # For intel do the follwing (this is overkill, but works if all python ops (e.g. pip , python , etc are prefixed with arch -x86_64) :
 # cd to dist
