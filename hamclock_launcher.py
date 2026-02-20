@@ -15,7 +15,7 @@ from queue import Queue, Empty
 
 class HamClockLauncher(wx.Frame):
     def __init__(self):
-        super().__init__(parent=None, title='HamClock Launcher', size=(800, 600))
+        super().__init__(parent=None, title='HamClock Launcher', size=(800, 650))
 
         self.process = None
         self.output_queue = Queue()
@@ -98,6 +98,44 @@ class HamClockLauncher(wx.Frame):
         selection_box.Add(grid_sizer, 0, wx.ALL | wx.EXPAND, 5)
         main_sizer.Add(selection_box, 0, wx.ALL | wx.EXPAND, 10)
 
+        # Backend server selection section
+        backend_box = wx.StaticBoxSizer(wx.VERTICAL, panel, "Backend Server")
+        backend_parent = backend_box.GetStaticBox()
+
+        # Radio buttons for server choice
+        server_radio_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.rb_legacy = wx.RadioButton(backend_parent, label='ClearSkyInstitute Legacy Server',
+                                        style=wx.RB_GROUP)
+        self.rb_legacy.SetValue(True)
+        self.rb_legacy.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        server_radio_sizer.Add(self.rb_legacy, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        self.rb_openhamclock = wx.RadioButton(backend_parent, label='OpenHamClock Server')
+        self.rb_openhamclock.SetValue(False)
+        self.rb_openhamclock.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        server_radio_sizer.Add(self.rb_openhamclock, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        backend_box.Add(server_radio_sizer, 0, wx.ALL | wx.EXPAND, 2)
+
+        # Host:port input row (shown/enabled only when OpenHamClock is selected)
+        host_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.host_label = wx.StaticText(backend_parent, label='Host:Port:')
+        host_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        self.host_input = wx.TextCtrl(backend_parent, value='', size=(220, -1))
+        self.host_input.SetHint('e.g. openhamclock.org:80')
+        host_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        backend_box.Add(host_sizer, 0, wx.LEFT | wx.BOTTOM, 5)
+
+        # Start with OpenHamClock host:port controls disabled
+        self.host_label.Enable(False)
+        self.host_input.Enable(False)
+
+        main_sizer.Add(backend_box, 0, wx.ALL | wx.EXPAND, 10)
+
         # Control buttons
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -138,6 +176,26 @@ class HamClockLauncher(wx.Frame):
 
         panel.SetSizer(main_sizer)
 
+    def set_backend_controls_enabled(self, enabled):
+        """Enable or disable all backend server controls"""
+        self.rb_legacy.Enable(enabled)
+        self.rb_openhamclock.Enable(enabled)
+        # Host:port only enabled when OpenHamClock is selected AND not running
+        if enabled and self.rb_openhamclock.GetValue():
+            self.host_label.Enable(True)
+            self.host_input.Enable(True)
+        else:
+            self.host_label.Enable(False)
+            self.host_input.Enable(False)
+
+    def on_server_selected(self, event):
+        """Handle backend server radio button selection"""
+        is_openhamclock = self.rb_openhamclock.GetValue()
+        self.host_label.Enable(is_openhamclock)
+        self.host_input.Enable(is_openhamclock)
+        if is_openhamclock:
+            self.host_input.SetFocus()
+
     def get_selected_binary(self):
         """Get the selected binary name"""
         for i, rb in enumerate(self.radio_buttons):
@@ -162,6 +220,24 @@ class HamClockLauncher(wx.Frame):
             wx.MessageBox('Please select a HamClock version first!', 'Warning', wx.OK | wx.ICON_WARNING)
             return
 
+        # Validate OpenHamClock host:port if selected
+        use_openhamclock = self.rb_openhamclock.GetValue()
+        backend_host_port = None
+        if use_openhamclock:
+            host_port = self.host_input.GetValue().strip()
+            if not host_port:
+                wx.MessageBox('Please enter a Host:Port for the OpenHamClock server.\n\nExample: openhamclock.org:80',
+                              'Missing Host:Port', wx.OK | wx.ICON_WARNING)
+                self.host_input.SetFocus()
+                return
+            # Basic validation: should contain a colon
+            if ':' not in host_port:
+                wx.MessageBox('Host:Port must be in the format host:port\n\nExample: openhamclock.org:80',
+                              'Invalid Host:Port', wx.OK | wx.ICON_WARNING)
+                self.host_input.SetFocus()
+                return
+            backend_host_port = host_port
+
         binary_path = os.path.join('hamclock_bin', binary_name)
 
         # Check if binary exists
@@ -178,15 +254,22 @@ class HamClockLauncher(wx.Frame):
             return
 
         try:
-            # Start the process with -o option
+            # Build command: always include -o; add -b host:port if OpenHamClock selected
+            cmd = [binary_path, '-o']
+            if backend_host_port:
+                cmd += ['-b', backend_host_port]
+
             self.process = subprocess.Popen(
-                [binary_path, '-o'],
+                cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 bufsize=1,
                 universal_newlines=True,
                 cwd=os.getcwd()
             )
+
+            # Disable backend controls while running
+            self.set_backend_controls_enabled(False)
 
             # Start reader thread
             self.reader_thread = threading.Thread(target=self.read_output, daemon=True)
@@ -195,8 +278,13 @@ class HamClockLauncher(wx.Frame):
             # Update UI
             self.start_btn.Enable(False)
             self.stop_btn.Enable(True)
-            self.status_text.SetLabel(f'Status: Running {binary_name}')
-            self.append_output(f'=== Started {binary_name} with PID {self.process.pid} ===\n')
+
+            server_label = f'OpenHamClock ({backend_host_port})' if backend_host_port else 'ClearSkyInstitute legacy'
+            self.status_text.SetLabel(f'Status: Running {binary_name} [{server_label}]')
+
+            cmd_display = ' '.join(cmd)
+            self.append_output(f'=== Started {binary_name} (PID {self.process.pid}) ===\n')
+            self.append_output(f'=== Command: {cmd_display} ===\n')
 
         except Exception as e:
             wx.MessageBox(f'Error starting HamClock: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
@@ -215,6 +303,7 @@ class HamClockLauncher(wx.Frame):
             self.status_text.SetLabel('Status: Stopped')
             self.start_btn.Enable(True)
             self.stop_btn.Enable(False)
+            self.set_backend_controls_enabled(True)
 
     def on_clear(self, event):
         """Clear the output display"""
@@ -287,7 +376,7 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 1.1</p>
+        <p><b>Version:</b> 1.2</p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.hickman@gmail.com</p>
 
@@ -308,7 +397,7 @@ SOFTWARE."""
 
         <hr>
 
-        <p><i>HamClock is developed by Elwood Downey</i></p>
+        <p><i>HamClock was developed by Elwood Downey (SK)</i></p>
 
         </body>
         </html>
@@ -372,6 +461,7 @@ SOFTWARE."""
         self.status_text.SetLabel('Status: Process ended')
         self.start_btn.Enable(True)
         self.stop_btn.Enable(False)
+        self.set_backend_controls_enabled(True)
 
     def append_output(self, text):
         """Append text to the output control and limit to max_lines"""
