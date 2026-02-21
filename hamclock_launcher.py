@@ -30,8 +30,12 @@ class HamClockLauncher(wx.Frame):
             'hamclock-web-3200x1920'
         ]
 
+        # Persistent config
+        self.config = wx.Config('HamClockLauncher')
+
         self.create_menu_bar()
         self.init_ui()
+        self.load_config()
         self.Centre()
 
         # Timer to check for output updates
@@ -102,33 +106,31 @@ class HamClockLauncher(wx.Frame):
         backend_box = wx.StaticBoxSizer(wx.VERTICAL, panel, "Backend Server")
         backend_parent = backend_box.GetStaticBox()
 
-        # Radio buttons for server choice
-        server_radio_sizer = wx.BoxSizer(wx.HORIZONTAL)
-
+        # Row 1: Legacy server radio button
+        row1_sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.rb_legacy = wx.RadioButton(backend_parent, label='ClearSkyInstitute Legacy Server',
                                         style=wx.RB_GROUP)
         self.rb_legacy.SetValue(True)
         self.rb_legacy.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
-        server_radio_sizer.Add(self.rb_legacy, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        row1_sizer.Add(self.rb_legacy, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        backend_box.Add(row1_sizer, 0, wx.ALL | wx.EXPAND, 2)
+
+        # Row 2: OpenHamClock radio button + host:port label + input on same line
+        row2_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.rb_openhamclock = wx.RadioButton(backend_parent, label='OpenHamClock Server')
         self.rb_openhamclock.SetValue(False)
         self.rb_openhamclock.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
-        server_radio_sizer.Add(self.rb_openhamclock, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
-
-        backend_box.Add(server_radio_sizer, 0, wx.ALL | wx.EXPAND, 2)
-
-        # Host:port input row (shown/enabled only when OpenHamClock is selected)
-        host_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        row2_sizer.Add(self.rb_openhamclock, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.host_label = wx.StaticText(backend_parent, label='Host:Port:')
-        host_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        row2_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.host_input = wx.TextCtrl(backend_parent, value='', size=(220, -1))
         self.host_input.SetHint('e.g. openhamclock.org:80')
-        host_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        row2_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        backend_box.Add(host_sizer, 0, wx.LEFT | wx.BOTTOM, 5)
+        backend_box.Add(row2_sizer, 0, wx.ALL | wx.EXPAND, 2)
 
         # Start with OpenHamClock host:port controls disabled
         self.host_label.Enable(False)
@@ -187,6 +189,24 @@ class HamClockLauncher(wx.Frame):
         else:
             self.host_label.Enable(False)
             self.host_input.Enable(False)
+
+    def load_config(self):
+        """Load saved server settings from wx.Config"""
+        use_openhamclock = self.config.ReadBool('use_openhamclock', defaultVal=False)
+        host_port = self.config.Read('openhamclock_host_port', defaultVal='')
+        self.rb_openhamclock.SetValue(use_openhamclock)
+        self.rb_legacy.SetValue(not use_openhamclock)
+        if host_port:
+            self.host_input.SetValue(host_port)
+        # Sync enabled state to loaded values
+        self.host_label.Enable(use_openhamclock)
+        self.host_input.Enable(use_openhamclock)
+
+    def save_config(self):
+        """Save current server settings to wx.Config"""
+        self.config.WriteBool('use_openhamclock', self.rb_openhamclock.GetValue())
+        self.config.Write('openhamclock_host_port', self.host_input.GetValue().strip())
+        self.config.Flush()
 
     def on_server_selected(self, event):
         """Handle backend server radio button selection"""
@@ -258,6 +278,9 @@ class HamClockLauncher(wx.Frame):
             cmd = [binary_path, '-o']
             if backend_host_port:
                 cmd += ['-b', backend_host_port]
+
+            # Save config now that we have a valid, confirmed start
+            self.save_config()
 
             self.process = subprocess.Popen(
                 cmd,
