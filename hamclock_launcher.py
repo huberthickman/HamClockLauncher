@@ -10,6 +10,7 @@ import threading
 import os
 import sys
 import webbrowser
+from pathlib import Path
 from queue import Queue, Empty
 
 
@@ -63,6 +64,15 @@ class HamClockLauncher(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_select_all, select_all_item)
 
         menu_bar.Append(edit_menu, '&Edit')
+
+        # Tools menu
+        tools_menu = wx.Menu()
+
+        self.clear_cache_item = tools_menu.Append(wx.ID_ANY, 'Clear HamClock &Cache',
+                                                   'Delete cached map, TLE, and other data files (preserves settings)')
+        self.Bind(wx.EVT_MENU, self.on_clear_cache, self.clear_cache_item)
+
+        menu_bar.Append(tools_menu, '&Tools')
 
         # Help menu
         help_menu = wx.Menu()
@@ -219,6 +229,60 @@ class HamClockLauncher(wx.Frame):
         if is_openhamclock:
             self.host_input.SetFocus()
 
+    def on_clear_cache(self, event):
+        """Delete all cached files in ~/.hamclock except the eeprom settings file"""
+        hamclock_dir = Path.home() / '.hamclock'
+
+        if not hamclock_dir.is_dir():
+            wx.MessageBox('No HamClock cache directory found.\n\n'
+                          f'Expected: {hamclock_dir}',
+                          'Nothing to Clear', wx.OK | wx.ICON_INFORMATION)
+            return
+
+        # Collect files to delete (everything except 'eeprom')
+        files_to_delete = [f for f in hamclock_dir.iterdir()
+                           if f.is_file() and f.name != 'eeprom']
+
+        if not files_to_delete:
+            wx.MessageBox('Cache is already empty (only the eeprom settings file remains).',
+                          'Nothing to Clear', wx.OK | wx.ICON_INFORMATION)
+            return
+
+        # Confirm with the user
+        response = wx.MessageBox(
+            f'This will delete {len(files_to_delete)} cached file(s) from:\n'
+            f'{hamclock_dir}\n\n'
+            'Your HamClock settings (eeprom) will be preserved.\n\n'
+            'HamClock will re-download these files on its next start.\n\n'
+            'Continue?',
+            'Clear HamClock Cache',
+            wx.YES_NO | wx.ICON_QUESTION
+        )
+
+        if response != wx.YES:
+            return
+
+        deleted = 0
+        errors = []
+        for f in files_to_delete:
+            try:
+                f.unlink()
+                deleted += 1
+            except OSError as e:
+                errors.append(f'{f.name}: {e}')
+
+        # Report results
+        if errors:
+            wx.MessageBox(
+                f'Deleted {deleted} file(s).\n\n'
+                f'Failed to delete {len(errors)} file(s):\n' + '\n'.join(errors),
+                'Cache Partially Cleared', wx.OK | wx.ICON_WARNING)
+        else:
+            wx.MessageBox(f'Successfully deleted {deleted} cached file(s).',
+                          'Cache Cleared', wx.OK | wx.ICON_INFORMATION)
+
+        self.append_output(f'\n=== Cleared HamClock cache: {deleted} file(s) deleted ===\n')
+
     def get_selected_binary(self):
         """Get the selected binary name"""
         for i, rb in enumerate(self.radio_buttons):
@@ -304,6 +368,7 @@ class HamClockLauncher(wx.Frame):
             # Update UI
             self.start_btn.Enable(False)
             self.stop_btn.Enable(True)
+            self.clear_cache_item.Enable(False)
 
             server_label = f'OpenHamClock ({backend_host_port})' if backend_host_port else 'ClearSkyInstitute legacy'
             self.status_text.SetLabel(f'Status: Running {binary_name} [{server_label}]')
@@ -330,6 +395,7 @@ class HamClockLauncher(wx.Frame):
             self.start_btn.Enable(True)
             self.stop_btn.Enable(False)
             self.set_backend_controls_enabled(True)
+            self.clear_cache_item.Enable(True)
 
     def on_clear(self, event):
         """Clear the output display"""
@@ -503,6 +569,7 @@ SOFTWARE."""
         self.start_btn.Enable(True)
         self.stop_btn.Enable(False)
         self.set_backend_controls_enabled(True)
+        self.clear_cache_item.Enable(True)
 
     def append_output(self, text):
         """Append text to the output control and limit to max_lines"""
