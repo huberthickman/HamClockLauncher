@@ -36,7 +36,8 @@ if sys.platform == 'darwin':
     Plist = dict(
         CFBundleName='HamClockLauncher',
         CFBundleGetInfoString='HamClockLauncher',
-        CFBundleShortVersionString='0.1.0',
+        CFBundleShortVersionString='1.2.0',
+        NSHumanReadableCopyright='HamClockLauncher © 2025-2026, Hubert Hickman'
         )
 
     print(Plist)

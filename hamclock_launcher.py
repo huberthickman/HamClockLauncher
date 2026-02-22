@@ -127,7 +127,7 @@ class HamClockLauncher(wx.Frame):
         row2_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.host_input = wx.TextCtrl(backend_parent, value='', size=(220, -1))
-        self.host_input.SetHint('e.g. openhamclock.org:80')
+        self.host_input.SetHint('e.g. anopenhamclockserver.com:80')
         row2_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         backend_box.Add(row2_sizer, 0, wx.ALL | wx.EXPAND, 2)
@@ -374,7 +374,7 @@ class HamClockLauncher(wx.Frame):
         # Launcher MIT License
         launcher_license = """MIT License
 
-Copyright (c) 2025 Hubert Hickman
+Copyright (c) 2025-2026 Hubert Hickman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

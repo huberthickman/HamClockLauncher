@@ -226,7 +226,7 @@
         </div>
 
         <div class="download-section">
-            <h2>Download <span class="version-badge">v0.2</span></h2>
+            <h2>Download <span class="version-badge">v1.2</span></h2>
             <div class="download-buttons">
                 <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_1_1/HamClockLauncher.dmg" class="download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -325,6 +325,14 @@
 
             <h2>Known Issues</h2>
             <h3>HamClock Updates</h3>
+            <h4>New in Version 1.2 </h4>
+            <p> This version of the HamClockLauncher includes support for the selection of HamClock backend servers.  By default the
+            legacy Clear Sky Institute server is still used, but other servers can be specified.  You must use a string of the form
+            hostname:80 to to connect to a different OpenHamClock backend
+            </p>
+            <p>In addition, a small fix to the HamClock client has been made to ensure that when backend servers are switched, the satellite data
+            is retrieved from the new server upon startup.  This eliminates any issues with the old satellite file served by the Clear Sky Institute Server.
+            </p>
             <p>The current version of the HamClockLauncher requires a manual build update for each
             release of HamClock.  The autoupdate feature of HamClock itself will not work with the launcher. I
                 will develop an autoupdate routine for the HamClockLauncher.
@@ -361,7 +369,7 @@
 
     <footer>
         <p>Built using <a href="https://www.wxpython.org/" target="_blank">wxPython</a></p>
-        <p>HamClock by <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">Elwood Downey</a></p>
+        <p>HamClock by <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">Elwood Downey, SK</a></p>
     </footer>
 </body>
 </html>
