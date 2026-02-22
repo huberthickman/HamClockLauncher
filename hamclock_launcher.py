@@ -70,6 +70,9 @@ class HamClockLauncher(wx.Frame):
         user_guide_item = help_menu.Append(wx.ID_ANY, 'HamClock &User Guide', 'Open HamClock User Guide PDF')
         self.Bind(wx.EVT_MENU, self.on_user_guide, user_guide_item)
 
+        release_notes_item = help_menu.Append(wx.ID_ANY, '&Release Notes', 'View release notes and version history')
+        self.Bind(wx.EVT_MENU, self.on_release_notes, release_notes_item)
+
         help_menu.AppendSeparator()
 
         about_item = help_menu.Append(wx.ID_ABOUT, '&About', 'About HamClock Launcher')
@@ -356,6 +359,21 @@ class HamClockLauncher(wx.Frame):
             webbrowser.open(url)
         except Exception as e:
             wx.MessageBox(f'Error opening user guide: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
+
+    def on_release_notes(self, event):
+        """Open release_notes.html in the user's default browser"""
+        # Look for release_notes.html next to the executable, then next to the script
+        rn_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'release_notes.html')
+        if not os.path.exists(rn_path):
+            rn_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'release_notes.html')
+
+        if os.path.exists(rn_path):
+            try:
+                webbrowser.open('file://'+rn_path)
+            except Exception as e:
+                wx.MessageBox(f'Could not open release notes: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
+        else:
+            wx.MessageBox('release_notes.html not found.', 'Not Found', wx.OK | wx.ICON_INFORMATION)
 
     def on_about(self, event):
         """Display About dialog"""

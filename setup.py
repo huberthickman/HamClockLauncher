@@ -11,7 +11,7 @@ import sys
 import datetime
 import fileinput
 
-version_string = "3.1.1"
+version_string = "1.2.0"
 
 #
 # Modify the build_info text file to have the current build date, number and correct version
@@ -43,7 +43,7 @@ if sys.platform == 'darwin':
     print(Plist)
     OPTIONS = {'argv_emulation': False,
                'iconfile': 'hamclock_icons.icns',
-               'resources': ['hamclock_bin'],
+               'resources': ['hamclock_bin', 'release_notes.html'],
                              #'cacert.pem'],
                'plist': Plist,
                'includes': ['six', 'packaging', 'packaging.version','wx',
