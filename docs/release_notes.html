@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HamClock Launcher &mdash; Release Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+        .memorial-banner {
+            background: #2c2c2c;
+            color: #d4d4d4;
+            text-align: center;
+            padding: 0.85rem 2rem;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #444;
+        }
+
+        .memorial-banner a {
+            color: #a89bcc;
+            text-decoration: none;
+        }
+
+        .memorial-banner a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .release {
+            background: white;
+            border-radius: 8px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #667eea;
+        }
+
+        .release.latest {
+            border-left-color: #764ba2;
+        }
+
+        .release-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .release-header h2 {
+            font-size: 1.35rem;
+            color: #764ba2;
+        }
+
+        .release-date {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .badge-new {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-fix {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-hamclock {
+            background: #e8eaf6;
+            color: #3949ab;
+        }
+
+        .release h3 {
+            color: #555;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin: 1.1rem 0 0.5rem 0;
+        }
+
+        .release ul {
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .release li {
+            margin-bottom: 0.4rem;
+            font-size: 0.97rem;
+        }
+
+        .release p {
+            font-size: 0.97rem;
+            margin-bottom: 0.75rem;
+            color: #444;
+        }
+
+        .hamclock-version {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #3949ab;
+            padding: 0.2rem 0.65rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.25rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #888;
+            font-size: 0.88rem;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>HamClock Launcher &mdash; Release Notes</h1>
+        <p>Version history and change log</p>
+    </div>
+
+    <div class="memorial-banner">
+        In memory of <strong>Elwood Downey, WB0OEW (SK)</strong> &mdash; creator of HamClock.
+        His work continues to serve the amateur radio community.
+    </div>
+
+    <div class="container">
+
+        <div class="back-link">
+            <a href="index.html">&larr; Back to HamClock Launcher</a>
+        </div>
+
+        <!-- v1.2 -->
+        <div class="release latest">
+            <div class="release-header">
+                <h2>Version 1.2</h2>
+                <span class="release-date">February 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.22</span>
+            </div>
+
+            <p>This release adds backend server selection to support the amateur radio community
+               following the passing of Elwood Downey (WB0OEW, SK), the original creator of HamClock.
+               By default the legacy ClearSkyInstitute server is still used, but other HamClock backends can used,
+                such as the <a href="https://github.com/BrianWilkinsFL/open-hamclock-backend" target="_blank">OpenHamClock-Backend</a> community project and other hamclock servers.
+                This ensures that the HamClock continues to function for the amateur radio community.</p>
+
+            <h3><span class="badge badge-new">New</span> Features</h3>
+            <ul>
+                <li><strong>Backend server selection</strong> &mdash; Choose between the ClearSkyInstitute legacy server (default) or any OpenHamClock-compatible server by entering a <code>hostname:port</code> address</li>
+                <li><strong>Persistent server settings</strong> &mdash; Your server choice and host:port are remembered between sessions using macOS preferences</li>
+                  <li><strong>Adds a new Tools menu with a Clear HamClock cache command.</strong>  This will clear the downloaded files in HamClock's cache while preserving the user
+                settings.  It may be useful when switching servers to clear HamClock's cache. </strong></li>
+                <li><strong>Release Notes</strong> menu item added under Help</li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Bug Fixes</h3>
+            <ul>
+                <li>Patched HamClock client to ensure satellite TLE data is retrieved from the selected backend server on startup, resolving issues with stale TLE data from the legacy server</li>
+            </ul>
+
+            <h3>Notes</h3>
+            <ul>
+                <li>The HamClock autoupdate feature is not compatible with the launcher. Each new HamClock version requires a new DMG release. An autoupdate mechanism for the launcher itself is planned for a future release.</li>
+            </ul>
+        </div>
+
+        <!-- v1.1 -->
+        <div class="release">
+            <div class="release-header">
+                <h2>Version 1.1</h2>
+                <span class="release-date">December 2025</span>
+                <span class="badge badge-hamclock">HamClock 4.22</span>
+            </div>
+
+            <h3><span class="badge badge-new">New</span> Features</h3>
+            <ul>
+                <li>Updated DMG download links and GitHub Pages website</li>
+                <li>Separated Apple Silicon and Intel Mac download targets</li>
+                <li>Improved header copy to clarify macOS-only support and bundled binaries</li>
+            </ul>
+        </div>
+
+        <!-- v1.0 / v0.2 -->
+        <div class="release">
+            <div class="release-header">
+                <h2>Version 0.2</h2>
+                <span class="release-date">Late 2025</span>
+            </div>
+
+            <p>Initial public release of HamClock Launcher.</p>
+
+            <h3><span class="badge badge-new">New</span> Features</h3>
+            <ul>
+                <li>wxPython GUI wrapping the HamClock web binaries</li>
+                <li>Resolution selection via radio buttons (800x480, 1600x960, 2400x1440, 3200x1920)</li>
+                <li>Real-time output capture and display with configurable line limit</li>
+                <li>One-click browser launch to <code>http://localhost:8081/live.html</code></li>
+                <li>Graceful shutdown with confirmation prompt if HamClock is running</li>
+                <li>Edit menu (Copy, Select All) and Help menu (User Guide, About)</li>
+                <li>DMG installers for both Apple Silicon and Intel Macs with all HamClock binaries bundled</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <footer>
+        <p><a href="index.html">HamClock Launcher</a> &mdash; Built using <a href="https://www.wxpython.org/" target="_blank">wxPython</a></p>
+    </footer>
+
+</body>
+</html>

@@ -35,6 +35,25 @@
             opacity: 0.9;
         }
 
+        .memorial-banner {
+            background: #2c2c2c;
+            color: #d4d4d4;
+            text-align: center;
+            padding: 0.85rem 2rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+            border-bottom: 1px solid #444;
+        }
+
+        .memorial-banner a {
+            color: #a89bcc;
+            text-decoration: none;
+        }
+
+        .memorial-banner a:hover {
+            text-decoration: underline;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -64,7 +83,8 @@
         }
 
         .download-btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 1rem 2rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -81,8 +101,8 @@
         }
 
         .download-btn svg {
-            vertical-align: middle;
             margin-right: 0.5rem;
+            flex-shrink: 0;
         }
 
         .version-badge {
@@ -118,6 +138,16 @@
             color: #764ba2;
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
+        }
+
+        .content h4 {
+            color: #555;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
         }
 
         .content ul, .content ol {
@@ -194,6 +224,21 @@
             border-radius: 4px;
         }
 
+        .release-notes-link {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .release-notes-link a {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .release-notes-link a:hover {
+            text-decoration: underline;
+        }
+
         footer {
             text-align: center;
             padding: 2rem;
@@ -209,26 +254,44 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        .screenshot-section {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .screenshot-section img {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>HamClock Launcher</h1>
         <p>A GUI launcher for HamClock on Macs</p>
-        <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 0.5rem;">HamClock versions are included - no other installation required</p>
-        <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 0.5rem;">This release includes HamClock version 4.22</p>
+        <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 0.5rem;">HamClock versions are included &mdash; no other installation required</p>
+        <p style="font-size: 0.9rem; opacity: 0.85; margin-top: 0.25rem;">This release includes HamClock version 4.22</p>
+    </div>
 
+    <div class="memorial-banner">
+        In memory of <strong>Elwood Downey, WB0OEW (SK)</strong> &mdash; creator of HamClock.
+        His work continues to serve the amateur radio community.
     </div>
 
     <div class="container">
+
         <div class="screenshot-section">
-            <img src="HamClockLauncher.png" alt="HamClock Launcher Screenshot" style="width: 100%; max-width: 900px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 2rem;">
+            <img src="HamClockLauncher.png" alt="HamClock Launcher Screenshot">
         </div>
 
         <div class="download-section">
-            <h2>Download <span class="version-badge">v0.2</span></h2>
+            <h2>Download <span class="version-badge">v1.2</span></h2>
             <div class="download-buttons">
-                <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_1_1/HamClockLauncher.dmg" class="download-btn">
+                <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_1_2/HamClockLauncher.dmg" class="download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -236,7 +299,7 @@
                     </svg>
                     Download for Apple Silicon (M series)
                 </a>
-                <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_1_1/HamClockLauncherIntel.dmg" class="download-btn">
+                <a href="https://github.com/huberthickman/HamClockLauncher/releases/download/release_1_2/HamClockLauncherIntel.dmg" class="download-btn">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -246,13 +309,19 @@
                 </a>
             </div>
             <div class="note">
-                <strong>Note:</strong> Choose the version that matches your Mac's processor. Not sure which one? Click the Apple menu → About This Mac to check your processor type.
+                <strong>Note:</strong> Choose the version that matches your Mac's processor. Not sure which one? Click the Apple menu &rarr; About This Mac to check your processor type.
+            </div>
+            <div class="release-notes-link" style="margin-top: 1rem;">
+                <a href="release_notes.html">📋 View Release Notes</a>
             </div>
         </div>
 
         <div class="content">
             <h2>Overview</h2>
-            <p>HamClock Launcher is a cross-platform desktop application that simplifies launching and managing HamClock instances. It captures and displays HamClock's output in real-time, making it easy to monitor the application's status and debug any issues.</p>
+            <p>HamClock Launcher is a macOS desktop application that simplifies launching and managing HamClock instances. It captures and displays HamClock's output in real-time, making it easy to monitor the application's status and debug any issues.</p>
+            <p>Following the passing of Elwood Downey (WB0OEW, SK) in early 2026, HamClock Launcher has been updated to support alternative backend servers
+                through the <a href="https://github.com/BrianWilkinsFL/open-hamclock-backend" target="_blank">OpenHamClock-Backend</a> community project and other hamclock servers.
+                This ensures that the HamClock continues to function for the amateur radio community.</p>
 
             <h2>Features</h2>
             <div class="features">
@@ -273,12 +342,12 @@
                     <p>Prompts before closing if running</p>
                 </div>
                 <div class="feature-box">
-                    <h4>📋 Output Management</h4>
-                    <p>Copy, select all, and auto-limiting</p>
+                    <h4>🖥️ Backend Server Selection</h4>
+                    <p>Use the legacy ClearSkyInstitute server or connect to an OpenHamClock server</p>
                 </div>
                 <div class="feature-box">
-                    <h4>📚 Help Resources</h4>
-                    <p>Quick access to user guide</p>
+                    <h4>📋 Output Management</h4>
+                    <p>Copy, select all, and auto-limiting of output</p>
                 </div>
             </div>
 
@@ -289,23 +358,24 @@
             </ul>
 
             <h2>Installation</h2>
-            <h3>Using the DMG Installer (Recommended for macOS)</h3>
+            <h3>Using the DMG Installer</h3>
             <ol>
                 <li>Download the appropriate DMG file for your Mac (see download buttons above)</li>
                 <li>Open the DMG file</li>
                 <li>Drag HamClockLauncher to your Applications folder</li>
-                <li>Launch the application - HamClock binaries are already included!</li>
+                <li>Launch the application &mdash; HamClock binaries are already included</li>
             </ol>
 
             <div class="note">
-                <strong>✨ DMG files include all HamClock binaries</strong> - No additional downloads needed! The DMG installer includes all four HamClock versions (800x480, 1600x960, 2400x1440, and 3200x1920) ready to use.
+                <strong>✨ DMG files include all HamClock binaries</strong> &mdash; No additional downloads needed! The installer includes all four HamClock versions (800x480, 1600x960, 2400x1440, and 3200x1920) ready to use.
             </div>
 
             <h2>Usage</h2>
             <ol>
-                <li><strong>Launch the Application</strong>: Open HamClockLauncher from your Applications folder (or run the Python script)</li>
-                <li><strong>Select HamClock Version</strong>: Choose your preferred display resolution from the radio buttons</li>
-                <li><strong>Start HamClock</strong>: Click "Start HamClock" button</li>
+                <li><strong>Launch the Application</strong>: Open HamClockLauncher from your Applications folder</li>
+                <li><strong>Select HamClock Version</strong>: Choose your preferred display resolution</li>
+                <li><strong>Select Backend Server</strong>: Choose the ClearSkyInstitute legacy server or enter a custom OpenHamClock server address (<code>hostname:port</code>)</li>
+                <li><strong>Start HamClock</strong>: Click "Start HamClock"</li>
                 <li><strong>Open in Browser</strong>: Click "Open in Browser" to view HamClock at <code>http://localhost:8081/live.html</code></li>
                 <li><strong>Stop HamClock</strong>: Click "Stop HamClock" when finished</li>
             </ol>
@@ -313,55 +383,48 @@
             <h2>Menu Options</h2>
             <h3>Edit Menu</h3>
             <ul>
-                <li><strong>Copy (Ctrl+C)</strong>: Copy selected text from the output window</li>
-                <li><strong>Select All (Ctrl+A)</strong>: Select all text in the output window</li>
+                <li><strong>Copy (Cmd+C)</strong>: Copy selected text from the output window</li>
+                <li><strong>Select All (Cmd+A)</strong>: Select all text in the output window</li>
             </ul>
-
             <h3>Help Menu</h3>
             <ul>
                 <li><strong>HamClock User Guide</strong>: Opens the official HamClock user guide PDF</li>
+                <li><strong>Release Notes</strong>: View the version history and release notes</li>
                 <li><strong>About</strong>: View application and license information</li>
             </ul>
 
             <h2>Known Issues</h2>
-            <h3>HamClock Updates</h3>
-            <p>The current version of the HamClockLauncher requires a manual build update for each
-            release of HamClock.  The autoupdate feature of HamClock itself will not work with the launcher. I
-                will develop an autoupdate routine for the HamClockLauncher.
-            </p>
             <h3>macOS TSM Warnings</h3>
             <p>When launching HamClock on macOS, you may see warnings like:</p>
             <pre><code>TSMSendMessageToUIServer: CFMessagePortSendRequest FAILED(-1) to send to port com.apple.tsm.uiserver</code></pre>
             <p>These warnings are harmless and related to macOS's Text Services Manager. They do not affect HamClock's functionality and can be safely ignored.</p>
-            <h3>Mac airport command missing or deprecated</h3>
-            <p>On newer version of macos, the airport command is missing or deprecated.  This command is used be HamClock to get the WiFi signal strength.  These
-            messages are informational, and HamClock does not report WifI signal strength in its display.  The messages look like :</p>
-            <pre><code>sh: / System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport: No such file or directory </code></pre>
-            <p>I am working on a workaround or fix.  HamClock still works fine, but will not report WiFi signal strength in the console.</p>
+
+            <h3>macOS Airport Command Missing</h3>
+            <p>On newer versions of macOS, the <code>airport</code> command used by HamClock to report WiFi signal strength is missing or deprecated. HamClock still works normally; it simply will not display WiFi signal strength. Messages like the following can be ignored:</p>
+            <pre><code>sh: /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport: No such file or directory</code></pre>
+
             <h2>License</h2>
-            <p>This project is licensed under the MIT License.</p>
-            <p>Copyright (c) 2025-2026 Hubert Hickman</p>
+            <p>This project is licensed under the MIT License. Copyright &copy; 2025&ndash;2026 Hubert Hickman.</p>
 
             <h2>About HamClock</h2>
-            <p>HamClock is developed by Elwood Downey and is available at:<br>
-            <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">https://www.clearskyinstitute.com/ham/HamClock/</a></p>
-            <p>HamClock is licensed under the MIT License.</p>
+            <p>HamClock was created by Elwood Downey (WB0OEW, SK) and is available at
+            <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">clearskyinstitute.com</a>.
+            HamClock is licensed under the MIT License.</p>
 
             <h2>Author</h2>
             <p><strong>Hubert Hickman</strong><br>
             Email: <a href="mailto:hubert.kf0vwd@yahoo.com">hubert.kf0vwd@yahoo.com</a></p>
 
             <div class="github-link">
-                <a href="https://github.com/huberthickman/HamClockLauncher" target="_blank">
-                    View on GitHub →
-                </a>
+                <a href="https://github.com/huberthickman/HamClockLauncher" target="_blank">View on GitHub &rarr;</a>
             </div>
         </div>
     </div>
 
     <footer>
         <p>Built using <a href="https://www.wxpython.org/" target="_blank">wxPython</a></p>
-        <p>HamClock by <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">Elwood Downey</a></p>
+        <p>HamClock by <a href="https://www.clearskyinstitute.com/ham/HamClock/" target="_blank">Elwood Downey, WB0OEW (SK)</a> &mdash; 73, Elwood.</p>
     </footer>
+
 </body>
 </html>

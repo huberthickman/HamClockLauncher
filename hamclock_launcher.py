@@ -10,12 +10,13 @@ import threading
 import os
 import sys
 import webbrowser
+from pathlib import Path
 from queue import Queue, Empty
 
 
 class HamClockLauncher(wx.Frame):
     def __init__(self):
-        super().__init__(parent=None, title='HamClock Launcher', size=(800, 600))
+        super().__init__(parent=None, title='HamClock Launcher', size=(800, 650))
 
         self.process = None
         self.output_queue = Queue()
@@ -30,8 +31,12 @@ class HamClockLauncher(wx.Frame):
             'hamclock-web-3200x1920'
         ]
 
+        # Persistent config
+        self.config = wx.Config('HamClockLauncher')
+
         self.create_menu_bar()
         self.init_ui()
+        self.load_config()
         self.Centre()
 
         # Timer to check for output updates
@@ -60,11 +65,23 @@ class HamClockLauncher(wx.Frame):
 
         menu_bar.Append(edit_menu, '&Edit')
 
+        # Tools menu
+        tools_menu = wx.Menu()
+
+        self.clear_cache_item = tools_menu.Append(wx.ID_ANY, 'Clear HamClock &Cache',
+                                                   'Delete cached map, TLE, and other data files (preserves settings)')
+        self.Bind(wx.EVT_MENU, self.on_clear_cache, self.clear_cache_item)
+
+        menu_bar.Append(tools_menu, '&Tools')
+
         # Help menu
         help_menu = wx.Menu()
 
         user_guide_item = help_menu.Append(wx.ID_ANY, 'HamClock &User Guide', 'Open HamClock User Guide PDF')
         self.Bind(wx.EVT_MENU, self.on_user_guide, user_guide_item)
+
+        release_notes_item = help_menu.Append(wx.ID_ANY, '&Release Notes', 'View release notes and version history')
+        self.Bind(wx.EVT_MENU, self.on_release_notes, release_notes_item)
 
         help_menu.AppendSeparator()
 
@@ -97,6 +114,42 @@ class HamClockLauncher(wx.Frame):
 
         selection_box.Add(grid_sizer, 0, wx.ALL | wx.EXPAND, 5)
         main_sizer.Add(selection_box, 0, wx.ALL | wx.EXPAND, 10)
+
+        # Backend server selection section
+        backend_box = wx.StaticBoxSizer(wx.VERTICAL, panel, "Backend Server")
+        backend_parent = backend_box.GetStaticBox()
+
+        # Row 1: Legacy server radio button
+        row1_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.rb_legacy = wx.RadioButton(backend_parent, label='ClearSkyInstitute Legacy Server',
+                                        style=wx.RB_GROUP)
+        self.rb_legacy.SetValue(True)
+        self.rb_legacy.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        row1_sizer.Add(self.rb_legacy, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        backend_box.Add(row1_sizer, 0, wx.ALL | wx.EXPAND, 2)
+
+        # Row 2: OpenHamClock radio button + host:port label + input on same line
+        row2_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.rb_openhamclock = wx.RadioButton(backend_parent, label='OpenHamClock Server')
+        self.rb_openhamclock.SetValue(False)
+        self.rb_openhamclock.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        row2_sizer.Add(self.rb_openhamclock, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        self.host_label = wx.StaticText(backend_parent, label='Host:Port:')
+        row2_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        self.host_input = wx.TextCtrl(backend_parent, value='', size=(220, -1))
+        self.host_input.SetHint('e.g. anopenhamclockserver.com:80')
+        row2_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+
+        backend_box.Add(row2_sizer, 0, wx.ALL | wx.EXPAND, 2)
+
+        # Start with OpenHamClock host:port controls disabled
+        self.host_label.Enable(False)
+        self.host_input.Enable(False)
+
+        main_sizer.Add(backend_box, 0, wx.ALL | wx.EXPAND, 10)
 
         # Control buttons
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -138,6 +191,98 @@ class HamClockLauncher(wx.Frame):
 
         panel.SetSizer(main_sizer)
 
+    def set_backend_controls_enabled(self, enabled):
+        """Enable or disable all backend server controls"""
+        self.rb_legacy.Enable(enabled)
+        self.rb_openhamclock.Enable(enabled)
+        # Host:port only enabled when OpenHamClock is selected AND not running
+        if enabled and self.rb_openhamclock.GetValue():
+            self.host_label.Enable(True)
+            self.host_input.Enable(True)
+        else:
+            self.host_label.Enable(False)
+            self.host_input.Enable(False)
+
+    def load_config(self):
+        """Load saved server settings from wx.Config"""
+        use_openhamclock = self.config.ReadBool('use_openhamclock', defaultVal=False)
+        host_port = self.config.Read('openhamclock_host_port', defaultVal='')
+        self.rb_openhamclock.SetValue(use_openhamclock)
+        self.rb_legacy.SetValue(not use_openhamclock)
+        if host_port:
+            self.host_input.SetValue(host_port)
+        # Sync enabled state to loaded values
+        self.host_label.Enable(use_openhamclock)
+        self.host_input.Enable(use_openhamclock)
+
+    def save_config(self):
+        """Save current server settings to wx.Config"""
+        self.config.WriteBool('use_openhamclock', self.rb_openhamclock.GetValue())
+        self.config.Write('openhamclock_host_port', self.host_input.GetValue().strip())
+        self.config.Flush()
+
+    def on_server_selected(self, event):
+        """Handle backend server radio button selection"""
+        is_openhamclock = self.rb_openhamclock.GetValue()
+        self.host_label.Enable(is_openhamclock)
+        self.host_input.Enable(is_openhamclock)
+        if is_openhamclock:
+            self.host_input.SetFocus()
+
+    def on_clear_cache(self, event):
+        """Delete all cached files in ~/.hamclock except the eeprom settings file"""
+        hamclock_dir = Path.home() / '.hamclock'
+
+        if not hamclock_dir.is_dir():
+            wx.MessageBox('No HamClock cache directory found.\n\n'
+                          f'Expected: {hamclock_dir}',
+                          'Nothing to Clear', wx.OK | wx.ICON_INFORMATION)
+            return
+
+        # Collect files to delete (everything except 'eeprom')
+        files_to_delete = [f for f in hamclock_dir.iterdir()
+                           if f.is_file() and f.name != 'eeprom']
+
+        if not files_to_delete:
+            wx.MessageBox('Cache is already empty (only the eeprom settings file remains).',
+                          'Nothing to Clear', wx.OK | wx.ICON_INFORMATION)
+            return
+
+        # Confirm with the user
+        response = wx.MessageBox(
+            f'This will delete {len(files_to_delete)} cached file(s) from:\n'
+            f'{hamclock_dir}\n\n'
+            'Your HamClock settings (eeprom) will be preserved.\n\n'
+            'HamClock will re-download these files on its next start.\n\n'
+            'Continue?',
+            'Clear HamClock Cache',
+            wx.YES_NO | wx.ICON_QUESTION
+        )
+
+        if response != wx.YES:
+            return
+
+        deleted = 0
+        errors = []
+        for f in files_to_delete:
+            try:
+                f.unlink()
+                deleted += 1
+            except OSError as e:
+                errors.append(f'{f.name}: {e}')
+
+        # Report results
+        if errors:
+            wx.MessageBox(
+                f'Deleted {deleted} file(s).\n\n'
+                f'Failed to delete {len(errors)} file(s):\n' + '\n'.join(errors),
+                'Cache Partially Cleared', wx.OK | wx.ICON_WARNING)
+        else:
+            wx.MessageBox(f'Successfully deleted {deleted} cached file(s).',
+                          'Cache Cleared', wx.OK | wx.ICON_INFORMATION)
+
+        self.append_output(f'\n=== Cleared HamClock cache: {deleted} file(s) deleted ===\n')
+
     def get_selected_binary(self):
         """Get the selected binary name"""
         for i, rb in enumerate(self.radio_buttons):
@@ -162,6 +307,24 @@ class HamClockLauncher(wx.Frame):
             wx.MessageBox('Please select a HamClock version first!', 'Warning', wx.OK | wx.ICON_WARNING)
             return
 
+        # Validate OpenHamClock host:port if selected
+        use_openhamclock = self.rb_openhamclock.GetValue()
+        backend_host_port = None
+        if use_openhamclock:
+            host_port = self.host_input.GetValue().strip()
+            if not host_port:
+                wx.MessageBox('Please enter a Host:Port for the OpenHamClock server.\n\nExample: openhamclock.org:80',
+                              'Missing Host:Port', wx.OK | wx.ICON_WARNING)
+                self.host_input.SetFocus()
+                return
+            # Basic validation: should contain a colon
+            if ':' not in host_port:
+                wx.MessageBox('Host:Port must be in the format host:port\n\nExample: openhamclock.org:80',
+                              'Invalid Host:Port', wx.OK | wx.ICON_WARNING)
+                self.host_input.SetFocus()
+                return
+            backend_host_port = host_port
+
         binary_path = os.path.join('hamclock_bin', binary_name)
 
         # Check if binary exists
@@ -178,15 +341,25 @@ class HamClockLauncher(wx.Frame):
             return
 
         try:
-            # Start the process with -o option
+            # Build command: always include -o; add -b host:port if OpenHamClock selected
+            cmd = [binary_path, '-o']
+            if backend_host_port:
+                cmd += ['-b', backend_host_port]
+
+            # Save config now that we have a valid, confirmed start
+            self.save_config()
+
             self.process = subprocess.Popen(
-                [binary_path, '-o'],
+                cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 bufsize=1,
                 universal_newlines=True,
                 cwd=os.getcwd()
             )
+
+            # Disable backend controls while running
+            self.set_backend_controls_enabled(False)
 
             # Start reader thread
             self.reader_thread = threading.Thread(target=self.read_output, daemon=True)
@@ -195,8 +368,14 @@ class HamClockLauncher(wx.Frame):
             # Update UI
             self.start_btn.Enable(False)
             self.stop_btn.Enable(True)
-            self.status_text.SetLabel(f'Status: Running {binary_name}')
-            self.append_output(f'=== Started {binary_name} with PID {self.process.pid} ===\n')
+            self.clear_cache_item.Enable(False)
+
+            server_label = f'OpenHamClock ({backend_host_port})' if backend_host_port else 'ClearSkyInstitute legacy'
+            self.status_text.SetLabel(f'Status: Running {binary_name} [{server_label}]')
+
+            cmd_display = ' '.join(cmd)
+            self.append_output(f'=== Started {binary_name} (PID {self.process.pid}) ===\n')
+            self.append_output(f'=== Command: {cmd_display} ===\n')
 
         except Exception as e:
             wx.MessageBox(f'Error starting HamClock: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
@@ -215,6 +394,8 @@ class HamClockLauncher(wx.Frame):
             self.status_text.SetLabel('Status: Stopped')
             self.start_btn.Enable(True)
             self.stop_btn.Enable(False)
+            self.set_backend_controls_enabled(True)
+            self.clear_cache_item.Enable(True)
 
     def on_clear(self, event):
         """Clear the output display"""
@@ -245,6 +426,21 @@ class HamClockLauncher(wx.Frame):
         except Exception as e:
             wx.MessageBox(f'Error opening user guide: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
 
+    def on_release_notes(self, event):
+        """Open release_notes.html in the user's default browser"""
+        # Look for release_notes.html next to the executable, then next to the script
+        rn_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'release_notes.html')
+        if not os.path.exists(rn_path):
+            rn_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'release_notes.html')
+
+        if os.path.exists(rn_path):
+            try:
+                webbrowser.open('file://'+rn_path)
+            except Exception as e:
+                wx.MessageBox(f'Could not open release notes: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
+        else:
+            wx.MessageBox('release_notes.html not found.', 'Not Found', wx.OK | wx.ICON_INFORMATION)
+
     def on_about(self, event):
         """Display About dialog"""
         # Read HamClock LICENSE file if it exists
@@ -262,7 +458,7 @@ class HamClockLauncher(wx.Frame):
         # Launcher MIT License
         launcher_license = """MIT License
 
-Copyright (c) 2025 Hubert Hickman
+Copyright (c) 2025-2026 Hubert Hickman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -287,7 +483,7 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 1.1</p>
+        <p><b>Version:</b> 1.2</p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.hickman@gmail.com</p>
 
@@ -308,7 +504,7 @@ SOFTWARE."""
 
         <hr>
 
-        <p><i>HamClock is developed by Elwood Downey</i></p>
+        <p><i>HamClock was developed by Elwood Downey (SK)</i></p>
 
         </body>
         </html>
@@ -372,6 +568,8 @@ SOFTWARE."""
         self.status_text.SetLabel('Status: Process ended')
         self.start_btn.Enable(True)
         self.stop_btn.Enable(False)
+        self.set_backend_controls_enabled(True)
+        self.clear_cache_item.Enable(True)
 
     def append_output(self, text):
         """Append text to the output control and limit to max_lines"""
