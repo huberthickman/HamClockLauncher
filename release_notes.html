@@ -197,8 +197,47 @@
     <div class="container">
 
 
-        <!-- v1.2 -->
+        <!-- v1.3 -->
         <div class="release latest">
+            <div class="release-header">
+                <h2>Version 1.3</h2>
+                <span class="release-date">April 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.23</span>
+            </div>
+
+            <p>This release removes the ClearSkyInstitute legacy server option, which is no longer
+               the default in the Open HamClock ecosystem. It is replaced with three explicit backend
+               choices: <strong>Open HamClock Backend</strong> (the new default), <strong>hamclock.com</strong>,
+               and a <strong>Custom</strong> option for any other OpenHamClock-compatible server.</p>
+
+            <h3><span class="badge badge-new">New</span> Features</h3>
+            <ul>
+                <li><strong>Three-way backend selection</strong> &mdash; choose between
+                    <code>Open HamClock Backend</code> (<code>ohb.hamclock.app:80</code>),
+                    <code>hamclock.com</code> (<code>hamclock.com:80</code>), or a
+                    <code>Custom Open HamClock Backend</code> with a user-supplied <code>host:port</code></li>
+                <li><strong>Automatic migration of server preferences</strong> on first launch of 1.3:
+                    users on the legacy ClearSkyInstitute server are moved to Open HamClock Backend;
+                    saved custom hosts matching a preset (<code>ohb.hamclock.app:80</code> or
+                    <code>hamclock.com:80</code>) are mapped to the corresponding radio button;
+                    all other saved hosts remain under the Custom option with their value preserved</li>
+                <li><strong>Bundled User Guide</strong> &mdash; <code>HamClockKey.pdf</code> now ships inside
+                    the app and opens in your default PDF viewer (typically Preview), removing the
+                    dependency on an external website for the user guide</li>
+            </ul>
+
+            <h3>Notes</h3>
+            <ul>
+                <li>The HamClock website link and attribution in the About dialog have been updated
+                    to reflect the Open HamClock project at
+                    <a href="https://github.com/openhamclock/hamclock" target="_blank">github.com/openhamclock/hamclock</a>,
+                    crediting both Elwood Charles Downey (SK, 2020&ndash;2025) as the original developer
+                    and Dave Koberstein as the current maintainer</li>
+            </ul>
+        </div>
+
+        <!-- v1.2 -->
+        <div class="release">
             <div class="release-header">
                 <h2>Version 1.2</h2>
                 <span class="release-date">February 2026</span>

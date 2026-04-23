@@ -15,6 +15,16 @@ from queue import Queue, Empty
 
 
 class HamClockLauncher(wx.Frame):
+    # Backend server presets
+    BACKEND_OHB = 'ohb'
+    BACKEND_HAMCLOCK_COM = 'hamclock_com'
+    BACKEND_CUSTOM = 'custom'
+
+    BACKEND_HOSTS = {
+        BACKEND_OHB: 'ohb.hamclock.app:80',
+        BACKEND_HAMCLOCK_COM: 'hamclock.com:80',
+    }
+
     def __init__(self):
         super().__init__(parent=None, title='HamClock Launcher', size=(800, 650))
 
@@ -36,6 +46,7 @@ class HamClockLauncher(wx.Frame):
 
         self.create_menu_bar()
         self.init_ui()
+        self.migrate_config_v13()
         self.load_config()
         self.Centre()
 
@@ -119,33 +130,41 @@ class HamClockLauncher(wx.Frame):
         backend_box = wx.StaticBoxSizer(wx.VERTICAL, panel, "Backend Server")
         backend_parent = backend_box.GetStaticBox()
 
-        # Row 1: Legacy server radio button
+        # Row 1: Open HamClock Backend (default)
         row1_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        self.rb_legacy = wx.RadioButton(backend_parent, label='ClearSkyInstitute Legacy Server',
-                                        style=wx.RB_GROUP)
-        self.rb_legacy.SetValue(True)
-        self.rb_legacy.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
-        row1_sizer.Add(self.rb_legacy, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.rb_ohb = wx.RadioButton(backend_parent, label='Open HamClock Backend (ohb.hamclock.app:80)',
+                                     style=wx.RB_GROUP)
+        self.rb_ohb.SetValue(True)
+        self.rb_ohb.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        row1_sizer.Add(self.rb_ohb, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
         backend_box.Add(row1_sizer, 0, wx.ALL | wx.EXPAND, 2)
 
-        # Row 2: OpenHamClock radio button + host:port label + input on same line
+        # Row 2: hamclock.com
         row2_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.rb_hamclock_com = wx.RadioButton(backend_parent, label='hamclock.com (hamclock.com:80)')
+        self.rb_hamclock_com.SetValue(False)
+        self.rb_hamclock_com.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        row2_sizer.Add(self.rb_hamclock_com, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        backend_box.Add(row2_sizer, 0, wx.ALL | wx.EXPAND, 2)
 
-        self.rb_openhamclock = wx.RadioButton(backend_parent, label='OpenHamClock Server')
-        self.rb_openhamclock.SetValue(False)
-        self.rb_openhamclock.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
-        row2_sizer.Add(self.rb_openhamclock, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        # Row 3: Custom Open HamClock Backend radio button + host:port label + input
+        row3_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.rb_custom = wx.RadioButton(backend_parent, label='Custom Open HamClock Backend')
+        self.rb_custom.SetValue(False)
+        self.rb_custom.Bind(wx.EVT_RADIOBUTTON, self.on_server_selected)
+        row3_sizer.Add(self.rb_custom, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.host_label = wx.StaticText(backend_parent, label='Host:Port:')
-        row2_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        row3_sizer.Add(self.host_label, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
         self.host_input = wx.TextCtrl(backend_parent, value='', size=(220, -1))
         self.host_input.SetHint('e.g. anopenhamclockserver.com:80')
-        row2_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
+        row3_sizer.Add(self.host_input, 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 5)
 
-        backend_box.Add(row2_sizer, 0, wx.ALL | wx.EXPAND, 2)
+        backend_box.Add(row3_sizer, 0, wx.ALL | wx.EXPAND, 2)
 
-        # Start with OpenHamClock host:port controls disabled
+        # Start with Custom host:port controls disabled
         self.host_label.Enable(False)
         self.host_input.Enable(False)
 
@@ -193,40 +212,110 @@ class HamClockLauncher(wx.Frame):
 
     def set_backend_controls_enabled(self, enabled):
         """Enable or disable all backend server controls"""
-        self.rb_legacy.Enable(enabled)
-        self.rb_openhamclock.Enable(enabled)
-        # Host:port only enabled when OpenHamClock is selected AND not running
-        if enabled and self.rb_openhamclock.GetValue():
+        self.rb_ohb.Enable(enabled)
+        self.rb_hamclock_com.Enable(enabled)
+        self.rb_custom.Enable(enabled)
+        # Host:port only enabled when Custom is selected AND not running
+        if enabled and self.rb_custom.GetValue():
             self.host_label.Enable(True)
             self.host_input.Enable(True)
         else:
             self.host_label.Enable(False)
             self.host_input.Enable(False)
 
+    def migrate_config_v13(self):
+        """One-shot migration from 1.2 config schema to 1.3 schema.
+
+        1.2 schema: use_openhamclock (bool), openhamclock_host_port (str)
+        1.3 schema: backend_choice (str: 'ohb' | 'hamclock_com' | 'custom'),
+                    openhamclock_host_port (str, only meaningful for 'custom')
+
+        Runs exactly once, gated by the 'migrated_v13' flag. The old
+        'use_openhamclock' key is left in place for safety.
+        """
+        if self.config.ReadBool('migrated_v13', defaultVal=False):
+            return
+
+        # If there's no prior config at all, just mark migration done
+        # and let defaults apply via load_config.
+        has_old_flag = self.config.HasEntry('use_openhamclock')
+        has_host = self.config.HasEntry('openhamclock_host_port')
+
+        if not has_old_flag and not has_host:
+            self.config.WriteBool('migrated_v13', True)
+            self.config.Flush()
+            return
+
+        old_use_ohc = self.config.ReadBool('use_openhamclock', defaultVal=False)
+        old_host_port = self.config.Read('openhamclock_host_port', defaultVal='').strip()
+
+        if not old_use_ohc:
+            # Legacy Clear Sky Institute user → new default (OHB).
+            # Leave openhamclock_host_port untouched.
+            self.config.Write('backend_choice', self.BACKEND_OHB)
+        else:
+            # User was on an OpenHamClock host:port. Map presets to their
+            # new radio buttons and clear the custom field for those;
+            # anything else becomes 'custom' with the host:port preserved.
+            if old_host_port == self.BACKEND_HOSTS[self.BACKEND_OHB]:
+                self.config.Write('backend_choice', self.BACKEND_OHB)
+                self.config.Write('openhamclock_host_port', '')
+            elif old_host_port == self.BACKEND_HOSTS[self.BACKEND_HAMCLOCK_COM]:
+                self.config.Write('backend_choice', self.BACKEND_HAMCLOCK_COM)
+                self.config.Write('openhamclock_host_port', '')
+            else:
+                self.config.Write('backend_choice', self.BACKEND_CUSTOM)
+                # Keep openhamclock_host_port as-is
+
+        self.config.WriteBool('migrated_v13', True)
+        self.config.Flush()
+
     def load_config(self):
         """Load saved server settings from wx.Config"""
-        use_openhamclock = self.config.ReadBool('use_openhamclock', defaultVal=False)
+        backend_choice = self.config.Read('backend_choice',
+                                          defaultVal=self.BACKEND_OHB)
         host_port = self.config.Read('openhamclock_host_port', defaultVal='')
-        self.rb_openhamclock.SetValue(use_openhamclock)
-        self.rb_legacy.SetValue(not use_openhamclock)
+
+        # Guard against an unknown value in the stored config
+        if backend_choice not in (self.BACKEND_OHB,
+                                  self.BACKEND_HAMCLOCK_COM,
+                                  self.BACKEND_CUSTOM):
+            backend_choice = self.BACKEND_OHB
+
+        self.rb_ohb.SetValue(backend_choice == self.BACKEND_OHB)
+        self.rb_hamclock_com.SetValue(backend_choice == self.BACKEND_HAMCLOCK_COM)
+        self.rb_custom.SetValue(backend_choice == self.BACKEND_CUSTOM)
+
         if host_port:
             self.host_input.SetValue(host_port)
+
         # Sync enabled state to loaded values
-        self.host_label.Enable(use_openhamclock)
-        self.host_input.Enable(use_openhamclock)
+        is_custom = (backend_choice == self.BACKEND_CUSTOM)
+        self.host_label.Enable(is_custom)
+        self.host_input.Enable(is_custom)
 
     def save_config(self):
         """Save current server settings to wx.Config"""
-        self.config.WriteBool('use_openhamclock', self.rb_openhamclock.GetValue())
+        self.config.Write('backend_choice', self.get_backend_choice())
         self.config.Write('openhamclock_host_port', self.host_input.GetValue().strip())
         self.config.Flush()
 
+    def get_backend_choice(self):
+        """Return the currently selected backend choice constant"""
+        if self.rb_ohb.GetValue():
+            return self.BACKEND_OHB
+        if self.rb_hamclock_com.GetValue():
+            return self.BACKEND_HAMCLOCK_COM
+        return self.BACKEND_CUSTOM
+
     def on_server_selected(self, event):
         """Handle backend server radio button selection"""
-        is_openhamclock = self.rb_openhamclock.GetValue()
-        self.host_label.Enable(is_openhamclock)
-        self.host_input.Enable(is_openhamclock)
-        if is_openhamclock:
+        is_custom = self.rb_custom.GetValue()
+        self.host_label.Enable(is_custom)
+        self.host_input.Enable(is_custom)
+        # Retain whatever is in the host_input field when switching away
+        # from Custom - do not clear it.
+        if is_custom:
             self.host_input.SetFocus()
 
     def on_clear_cache(self, event):
@@ -307,23 +396,26 @@ class HamClockLauncher(wx.Frame):
             wx.MessageBox('Please select a HamClock version first!', 'Warning', wx.OK | wx.ICON_WARNING)
             return
 
-        # Validate OpenHamClock host:port if selected
-        use_openhamclock = self.rb_openhamclock.GetValue()
-        backend_host_port = None
-        if use_openhamclock:
+        # Resolve backend host:port from the selected radio button.
+        # -b is always passed in 1.3; there is no longer a "no backend" default.
+        backend_choice = self.get_backend_choice()
+        if backend_choice == self.BACKEND_CUSTOM:
             host_port = self.host_input.GetValue().strip()
             if not host_port:
-                wx.MessageBox('Please enter a Host:Port for the OpenHamClock server.\n\nExample: openhamclock.org:80',
+                wx.MessageBox('Please enter a Host:Port for the Custom Open HamClock Backend.\n\n'
+                              'Example: anopenhamclockserver.com:80',
                               'Missing Host:Port', wx.OK | wx.ICON_WARNING)
                 self.host_input.SetFocus()
                 return
-            # Basic validation: should contain a colon
             if ':' not in host_port:
-                wx.MessageBox('Host:Port must be in the format host:port\n\nExample: openhamclock.org:80',
+                wx.MessageBox('Host:Port must be in the format host:port\n\n'
+                              'Example: anopenhamclockserver.com:80',
                               'Invalid Host:Port', wx.OK | wx.ICON_WARNING)
                 self.host_input.SetFocus()
                 return
             backend_host_port = host_port
+        else:
+            backend_host_port = self.BACKEND_HOSTS[backend_choice]
 
         binary_path = os.path.join('hamclock_bin', binary_name)
 
@@ -341,10 +433,8 @@ class HamClockLauncher(wx.Frame):
             return
 
         try:
-            # Build command: always include -o; add -b host:port if OpenHamClock selected
-            cmd = [binary_path, '-o']
-            if backend_host_port:
-                cmd += ['-b', backend_host_port]
+            # Build command: always pass -o and -b host:port
+            cmd = [binary_path, '-o', '-b', backend_host_port]
 
             # Save config now that we have a valid, confirmed start
             self.save_config()
@@ -370,7 +460,12 @@ class HamClockLauncher(wx.Frame):
             self.stop_btn.Enable(True)
             self.clear_cache_item.Enable(False)
 
-            server_label = f'OpenHamClock ({backend_host_port})' if backend_host_port else 'ClearSkyInstitute legacy'
+            if backend_choice == self.BACKEND_OHB:
+                server_label = 'Open HamClock Backend'
+            elif backend_choice == self.BACKEND_HAMCLOCK_COM:
+                server_label = 'hamclock.com'
+            else:
+                server_label = f'Custom ({backend_host_port})'
             self.status_text.SetLabel(f'Status: Running {binary_name} [{server_label}]')
 
             cmd_display = ' '.join(cmd)
@@ -419,10 +514,19 @@ class HamClockLauncher(wx.Frame):
         self.output_ctrl.SetSelection(-1, -1)
 
     def on_user_guide(self, event):
-        """Open HamClock User Guide in browser"""
-        url = "https://www.clearskyinstitute.com/ham/HamClock/HamClockKey.pdf"
+        """Open the bundled HamClockKey.pdf in the user's default PDF viewer"""
+        # Look for HamClockKey.pdf next to the executable, then next to the script
+        pdf_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'HamClockKey.pdf')
+        if not os.path.exists(pdf_path):
+            pdf_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'HamClockKey.pdf')
+
+        if not os.path.exists(pdf_path):
+            wx.MessageBox('HamClockKey.pdf not found.', 'Not Found', wx.OK | wx.ICON_INFORMATION)
+            return
+
         try:
-            webbrowser.open(url)
+            # Use macOS `open` so the user's default PDF viewer handles it
+            subprocess.run(['open', pdf_path], check=True)
         except Exception as e:
             wx.MessageBox(f'Error opening user guide: {str(e)}', 'Error', wx.OK | wx.ICON_ERROR)
 
@@ -483,14 +587,14 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 1.2</p>
+        <p><b>Version:</b> 1.3</p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.hickman@gmail.com</p>
 
         <p>A wxPython launcher for HamClock</p>
 
-        <p><b>HamClock Website:</b> <a href="https://www.clearskyinstitute.com/ham/HamClock/">
-        https://www.clearskyinstitute.com/ham/HamClock/</a></p>
+        <p><b>HamClock Website:</b> <a href="https://github.com/openhamclock/hamclock">
+        https://github.com/openhamclock/hamclock</a></p>
 
         <hr>
 
@@ -504,7 +608,7 @@ SOFTWARE."""
 
         <hr>
 
-        <p><i>HamClock was developed by Elwood Downey (SK)</i></p>
+        <p><i>HamClock was originally developed by Elwood Charles Downey (SK, 2020&ndash;2025) and is now maintained by Dave Koberstein.</i></p>
 
         </body>
         </html>
