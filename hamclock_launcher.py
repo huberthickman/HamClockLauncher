@@ -587,7 +587,7 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 1.4</p>
+        <p><b>Version:</b> 1.5</p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.hickman@gmail.com</p>
 
