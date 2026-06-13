@@ -48,7 +48,7 @@ if sys.platform == 'darwin':
                'plist': Plist,
                'includes': ['six', 'packaging', 'packaging.version','wx',
                             'packaging.specifiers', 'packaging.requirements', 'appdirs', 'requests', 'OpenSSL',
-                            'pyasn1', 'certifi', 'ndg-httpsclient', 'mcpi'],
+                            'pyasn1', 'certifi', 'ndg-httpsclient'],
                'packages': ['wx']
               # 'codesign_entitlements': 'entitlements.plist'
 
