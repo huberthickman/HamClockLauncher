@@ -14,6 +14,18 @@ from pathlib import Path
 from queue import Queue, Empty
 
 
+class LinkOpeningHtmlWindow(wx.html.HtmlWindow):
+    """HtmlWindow that opens http(s) links in the user's default browser
+    instead of trying to render them itself."""
+
+    def OnLinkClicked(self, link):
+        href = link.GetHref()
+        if href.startswith(('http://', 'https://', 'mailto:')):
+            webbrowser.open(href)
+        else:
+            super().OnLinkClicked(link)
+
+
 class HamClockLauncher(wx.Frame):
     # Backend server presets
     BACKEND_OHB = 'ohb'
@@ -587,14 +599,14 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 1.5</p>
+        <p><b>Version:</b> 4.26 </p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.hickman@gmail.com</p>
 
         <p>A wxPython launcher for HamClock</p>
 
-        <p><b>HamClock Website:</b> <a href="https://github.com/openhamclock/hamclock">
-        https://github.com/openhamclock/hamclock</a></p>
+        <p><b>Mac HamClock Launcher Website:</b> <a href="https://machamclocklauncher.org">https://machamclocklauncher.org</a></p>
+        <p><b>Open Hamclock Backend Website:</b> <a href="https://ohb.works">https://ohb.works</a></p>
 
         <hr>
 
@@ -617,7 +629,7 @@ SOFTWARE."""
         # Create dialog with HTML window
         dlg = wx.Dialog(self, title="About HamClock Launcher", size=(700, 600))
 
-        html = wx.html.HtmlWindow(dlg)
+        html = LinkOpeningHtmlWindow(dlg)
         html.SetPage(html_content)
 
         # Create OK button
