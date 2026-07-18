@@ -599,9 +599,9 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 4.26 </p>
+        <p><b>Version:</b> 4.27 </p>
         <p><b>Developer:</b> Hubert Hickman<br>
-        <b>Email:</b> hubert.hickman@gmail.com</p>
+        <b>Email:</b> hubert.kf0vwd@yahoo.com</p>
 
         <p>A wxPython launcher for HamClock</p>
 

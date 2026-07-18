@@ -11,7 +11,7 @@ import sys
 import datetime
 import fileinput
 
-version_string = "4.26"
+version_string = "4.27"
 
 #
 # Modify the build_info text file to have the current build date, number and correct version
@@ -36,7 +36,7 @@ if sys.platform == 'darwin':
     Plist = dict(
         CFBundleName='HamClockLauncher',
         CFBundleGetInfoString='HamClockLauncher',
-        CFBundleShortVersionString='4.26',
+        CFBundleShortVersionString='4.27',
         NSHumanReadableCopyright='HamClockLauncher © 2025-2026, Hubert Hickman'
         )
 
