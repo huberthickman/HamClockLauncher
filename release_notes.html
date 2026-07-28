@@ -195,8 +195,57 @@
     </div>
 
     <div class="container">
- <!-- v4.27 -->
-<div class="release latest">
+
+        <!-- v4.28 -->
+        <div class="release latest">
+            <div class="release-header">
+                <h2>Version 4.28</h2>
+                <span class="release-date">July 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.28</span>
+            </div>
+
+            <p>This release bundles HamClock <strong>4.28</strong>, which brings new features and
+               bug fixes from the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.28.0" target="_blank">Open HamClock 4.28.0 release</a>.
+               No changes have been made to the launcher itself; this update exists to bundle
+               the new client and its updated User Guide.</p>
+
+            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.28</h3>
+            <ul>
+                <li><strong>Satellite alerts via hams.at</strong> &mdash; upcoming pass alerts sorted
+                    newest to oldest, with hover details and satellite co-visibility so you can see
+                    when two stations have the same satellite in view</li>
+                <li><strong>The seven classical planets</strong> &mdash; solar system bodies can now
+                    be displayed, with popup details for each</li>
+                <li><strong>New Mesh Mon pane</strong> for monitoring mesh network activity</li>
+                <li><strong>New RSG pane</strong> &mdash; opened by clicking the NOAA SpaceWx pane</li>
+                <li><strong>ONTA improvements</strong>, including PARKS retrieval that now behaves the
+                    same way as regular ONTA retrieval</li>
+                <li><strong>Larger, more realistic ADS-B aircraft icons</strong> on the map, plus a
+                    refreshed icon set throughout</li>
+                <li><strong>Three-button mouse support</strong> &mdash; the middle and right buttons
+                    are now both usable</li>
+                <li><strong>Updated User Guide</strong> covering all 4.28 features &mdash; the new
+                    <code>HamClockKey.pdf</code> is bundled with this release</li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
+            <ul>
+                <li>Tropical weather rotation fixes, and corrected lat/lon handling so tropical
+                    weather now displays in all map projections</li>
+                <li>Dismissing a planet popup no longer erases the map overlay; popups now wait for
+                    an in-progress map sweep to finish before appearing</li>
+                <li>The status line continues to update while a message popup is open</li>
+                <li>Corrected the install-instructions link on page 9</li>
+                <li>Irrelevant build warnings are now suppressed</li>
+            </ul>
+
+            <p>For the complete list of changes and bug fixes, see the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.28.0" target="_blank">upstream 4.28.0 release notes</a>.</p>
+        </div>
+
+        <!-- v4.27 -->
+<div class="release">
     <div class="release-header">
         <h2>Version 4.27</h2>
         <span class="release-date">July 2026</span>
@@ -243,7 +292,7 @@
 </div>
 
     <!-- v4.26 -->
-        <div class="release latest">
+        <div class="release">
             <div class="release-header">
                 <h2>Version 4.26</h2>
                 <span class="release-date">June 2026</span>
@@ -304,45 +353,6 @@
                <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.25.0" target="_blank">upstream 4.25.0 release notes</a>.</p>
         </div>
 
-        <!-- v1.4 -->
-        <div class="release">
-            <div class="release-header">
-                <h2>Version 1.5</h2>
-                <span class="release-date">May 2026</span>
-                <span class="badge badge-hamclock">HamClock 4.25</span>
-            </div>
-
-            <p>This release bundles HamClock <strong>4.25</strong>, which brings new features and
-               bug fixes from the
-               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.25.0" target="_blank">Open HamClock 4.25.0 release</a>.
-               No changes have been made to the launcher itself; this update exists to bundle
-               the new client.</p>
-
-            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.25</h3>
-            <ul>
-                <li><strong>Tropical weather reporting and cyclone tracks</strong> &mdash; new
-                    cyclone and tropical weather data displayed on the map</li>
-                <li><strong>Satellite UX improvements</strong> &mdash; a Refresh button for TLEs,
-                    shortened &ldquo;Select Satellites&rdquo; label, and improved handling when a
-                    satellite disappears from view</li>
-                <li><strong>Improved lightning rendering</strong> &mdash; better bolt sizing and
-                    decluttering across all resolutions</li>
-                <li><strong>Optional config file metadata</strong> &mdash; useful for power users
-                    and scripted setups</li>
-            </ul>
-
-            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
-            <ul>
-                <li>Mapped ports are now saved correctly</li>
-                <li>Lightning requests now include the user agent, fixing issues with some backend servers</li>
-                <li>Fixed NCDXF lightning ghost rotation visual glitch</li>
-            </ul>
-
-            <p>For the complete list of changes and bug fixes, see the
-               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.25.0" target="_blank">upstream 4.25.0 release notes</a>.</p>
-        </div>
-
-        <!-- v1.4 -->
         <div class="release">
             <div class="release-header">
                 <h2>Version 1.4</h2>
