@@ -526,14 +526,15 @@ class HamClockLauncher(wx.Frame):
         self.output_ctrl.SetSelection(-1, -1)
 
     def on_user_guide(self, event):
-        """Open the bundled HamClockKey.pdf in the user's default PDF viewer"""
-        # Look for HamClockKey.pdf next to the executable, then next to the script
-        pdf_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), 'HamClockKey.pdf')
+        """Open the bundled HamClockUserGuide.pdf in the user's default PDF viewer"""
+        # Look for the user guide next to the executable, then next to the script
+        pdf_name = 'HamClockUserGuide.pdf'
+        pdf_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), pdf_name)
         if not os.path.exists(pdf_path):
-            pdf_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'HamClockKey.pdf')
+            pdf_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), pdf_name)
 
         if not os.path.exists(pdf_path):
-            wx.MessageBox('HamClockKey.pdf not found.', 'Not Found', wx.OK | wx.ICON_INFORMATION)
+            wx.MessageBox(f'{pdf_name} not found.', 'Not Found', wx.OK | wx.ICON_INFORMATION)
             return
 
         try:
@@ -599,7 +600,7 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 4.28 </p>
+        <p><b>Version:</b> 4.29 </p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.kf0vwd@yahoo.com</p>
 

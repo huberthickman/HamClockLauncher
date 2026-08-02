@@ -196,8 +196,56 @@
 
     <div class="container">
 
-        <!-- v4.28 -->
+        <!-- v4.29 -->
         <div class="release latest">
+            <div class="release-header">
+                <h2>Version 4.29</h2>
+                <span class="release-date">August 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.29</span>
+            </div>
+
+            <p>This release bundles HamClock <strong>4.29</strong>, which brings new features and
+               bug fixes from the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.29.0" target="_blank">Open HamClock 4.29.0 release</a>.
+               The bundled User Guide has been renamed to match upstream; otherwise the launcher
+               is unchanged.</p>
+
+            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.29</h3>
+            <ul>
+                <li><strong>Political boundaries on the map</strong> &mdash; country borders, US state
+                    lines on zoomed maps, and Canadian province lines are now drawn, making it much
+                    easier to place a station at a glance. Borders are on by default</li>
+                <li><strong>Customizable border colors</strong> &mdash; national and state borders can
+                    each be set to a color of your choosing</li>
+                <li><strong>Borders on Clouds and Terrain maps</strong> &mdash; boundary overlays can
+                    be toggled on or off independently for these map styles</li>
+                <li><strong>Snappier satellite tracks</strong> &mdash; the satellite footprint now
+                    refreshes every 5 seconds instead of waiting for the full 30-second map sweep</li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
+            <ul>
+                <li>Fixed the magnetic bearing in the DX pane, which could display as NaN</li>
+                <li>Cleaned up stray pixels in the status line</li>
+                <li>Tropical weather no longer bleeds over the edge of the map, and the zoom level
+                    display is now consistent</li>
+                <li>Storms are now drawn on top of lightning rather than behind it</li>
+                <li>Fixed label crowding in the color editor</li>
+            </ul>
+
+            <h3><span class="badge badge-new">New</span> Launcher Changes</h3>
+            <ul>
+                <li>The bundled User Guide is now named <code>HamClockUserGuide.pdf</code>, matching
+                    upstream (it was previously <code>HamClockKey.pdf</code>). Help &rarr; HamClock
+                    User Guide works exactly as before</li>
+            </ul>
+
+            <p>For the complete list of changes and bug fixes, see the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.29.0" target="_blank">upstream 4.29.0 release notes</a>.</p>
+        </div>
+
+        <!-- v4.28 -->
+        <div class="release">
             <div class="release-header">
                 <h2>Version 4.28</h2>
                 <span class="release-date">July 2026</span>
