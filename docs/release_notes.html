@@ -196,8 +196,60 @@
 
     <div class="container">
 
-        <!-- v4.29 -->
+        <!-- v4.30 -->
         <div class="release latest">
+            <div class="release-header">
+                <h2>Version 4.30</h2>
+                <span class="release-date">August 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.30</span>
+            </div>
+
+            <p>This release bundles HamClock <strong>4.30</strong>, which brings new features and
+               bug fixes from the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.30.0" target="_blank">Open HamClock 4.30.0 release</a>.
+               No changes have been made to the launcher itself; this update exists to bundle
+               the new client and its updated User Guide.</p>
+
+            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.30</h3>
+            <ul>
+                <li><strong>Reorganized pane picker</strong> &mdash; panes are now grouped into
+                    categories and chosen from an inline accordion instead of a popup, with
+                    shortened labels for long entries, custom ordering within each category, and
+                    keyboard navigation using the arrow keys and space bar</li>
+                <li><strong>New Eclipse pane</strong> &mdash; solar eclipse information, drawn with a
+                    real moon glyph and able to open the related website directly</li>
+                <li><strong>WEFAX fetching</strong> &mdash; HamClock can now pull WEFAX imagery from
+                    the Open HamClock Backend</li>
+                <li><strong>IOTA support in the On The Air pane</strong>, plus better handling when an
+                    organization has no spots to report</li>
+                <li><strong>DX Cluster filtering</strong> &mdash; filter spots by mode and by band, and
+                    toggle IOTA markers on the map</li>
+                <li><strong>Tropical weather options</strong> &mdash; a new options link makes the Trop
+                    Wx settings easier to find, the storm path on the map can be turned on or off,
+                    and there is now a direct link to open the JTWC page</li>
+                <li><strong>UTC / local time toggle</strong> &mdash; clicking the UTC button now
+                    switches the display over to local time</li>
+                <li><strong>More lightning</strong> &mdash; the strike limit has been raised to 9,999</li>
+                <li><strong>HTTP 304 support</strong> for smarter caching, and movie handling moved to
+                    the backend</li>
+                <li><strong>Updated User Guide</strong> covering all 4.30 features &mdash; bundled with
+                    this release as <code>HamClockUserGuide.pdf</code></li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
+            <ul>
+                <li>Fixed vertical centering of the callsign</li>
+                <li>Redrawing the UTC button no longer erases the MOTD mailbox icon</li>
+                <li>Track arrows no longer run off the edge of the map, thanks to unified handling of
+                    segment spans</li>
+            </ul>
+
+            <p>For the complete list of changes and bug fixes, see the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.30.0" target="_blank">upstream 4.30.0 release notes</a>.</p>
+        </div>
+
+        <!-- v4.29 -->
+        <div class="release">
             <div class="release-header">
                 <h2>Version 4.29</h2>
                 <span class="release-date">August 2026</span>
