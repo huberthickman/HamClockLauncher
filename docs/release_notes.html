@@ -196,8 +196,59 @@
 
     <div class="container">
 
-        <!-- v4.30 -->
+        <!-- v4.31 -->
         <div class="release latest">
+            <div class="release-header">
+                <h2>Version 4.31</h2>
+                <span class="release-date">August 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.31</span>
+            </div>
+
+            <p>This release bundles HamClock <strong>4.31</strong>, which brings new features and
+               bug fixes from the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.31.0" target="_blank">Open HamClock 4.31.0 release</a>.
+               No changes have been made to the launcher itself; this update exists to bundle
+               the new client and its updated User Guide.</p>
+
+            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.31</h3>
+            <ul>
+                <li><strong>APRS support</strong> &mdash; APRS stations are now tracked and drawn on
+                    the map, with periodic purging of stale positions so the display stays current</li>
+                <li><strong>HAB and PicoBalloon tracking</strong> &mdash; follow high-altitude balloon
+                    and pico balloon flights alongside your other map data</li>
+                <li><strong>HamAlert integration</strong> &mdash; HamClock can now surface your
+                    HamAlert notifications (requires entering your HamAlert username and password
+                    in Setup)</li>
+                <li><strong>New Band Activity pane</strong> &mdash; see activity across the bands at a
+                    glance</li>
+                <li><strong>More X-OTA park highlights</strong> in the On The Air pane</li>
+                <li><strong>630m band support</strong>, with the Live Spots menu now resizing to fit
+                    the band list</li>
+                <li><strong>Rotating titles</strong> &mdash; separate titles with a semicolon to
+                    rotate through as many as six</li>
+                <li><strong>Touchscreen improvements</strong> &mdash; tooltips now work on touch
+                    displays, and OK / Cancel buttons are easier to hit</li>
+                <li><strong>Color-coded WARNING and ERROR messages</strong> for easier scanning</li>
+                <li><strong>Updated User Guide</strong> covering all 4.31 features &mdash; bundled with
+                    this release as <code>HamClockUserGuide.pdf</code></li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
+            <ul>
+                <li>Corrected the X-Ray data source to GOES-18</li>
+                <li>Fixed placement of the config pane</li>
+                <li>Fixed band spacing introduced with 630m; bands are now laid out in four columns</li>
+                <li>APRS colors and menu sizes adjusted, and the clock keeps running while a popup is
+                    open</li>
+                <li>Shortened an over-long label that did not fit the selection pane</li>
+            </ul>
+
+            <p>For the complete list of changes and bug fixes, see the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.31.0" target="_blank">upstream 4.31.0 release notes</a>.</p>
+        </div>
+
+        <!-- v4.30 -->
+        <div class="release">
             <div class="release-header">
                 <h2>Version 4.30</h2>
                 <span class="release-date">August 2026</span>
