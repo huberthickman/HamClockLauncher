@@ -600,7 +600,7 @@ SOFTWARE."""
         <html>
         <body>
         <h2>HamClock Launcher</h2>
-        <p><b>Version:</b> 4.30 </p>
+        <p><b>Version:</b> 4.31 </p>
         <p><b>Developer:</b> Hubert Hickman<br>
         <b>Email:</b> hubert.kf0vwd@yahoo.com</p>
 
