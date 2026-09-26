@@ -196,8 +196,82 @@
 
     <div class="container">
 
-        <!-- v4.31 -->
+        <!-- v4.32 -->
         <div class="release latest">
+            <div class="release-header">
+                <h2>Version 4.32</h2>
+                <span class="release-date">September 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.32</span>
+            </div>
+
+            <p>This release bundles HamClock <strong>4.32</strong>, which brings new features and
+               bug fixes from the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.32.0" target="_blank">Open HamClock 4.32.0 release</a>.
+               The launcher itself is unchanged, but the bundled HamClock binaries are now built
+               with options that remove features which don&rsquo;t apply on a Mac (see
+               <em>Launcher Changes</em> below).</p>
+
+            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.32</h3>
+            <ul>
+                <li><strong>New Fire Weather, Marine Weather and Quake panes</strong> &mdash; each with
+                    matching map displays, plus marine weather alerts</li>
+                <li><strong>Fires on the map</strong> &mdash; a new Fires On/Off button on the
+                    Countries, Terrain and Clouds maps</li>
+                <li><strong>ADS-B and Windy views</strong> open in an embedded frame, and the maps
+                    have new badges</li>
+                <li><strong>Live Spots improvements</strong> &mdash; 4m, 630m, 2200m and 23cm now sit
+                    on their own row for WSPR, and a new Map On/Off control</li>
+                <li><strong>On The Air pane</strong> &mdash; a new Org drop-down replaces typing the
+                    organization, the Band and Org lists are sorted by frequency, and TOWERS and
+                    WWBOTA activations are now color-coded</li>
+                <li><strong>HamQTH support</strong> for callsign lookups</li>
+                <li><strong>DX Cluster</strong> &mdash; improved login and spot parsing for AR-Cluster
+                    and CC-Cluster nodes</li>
+                <li><strong>HamAlert pane</strong> can now be cleared with a CLR button</li>
+                <li><strong>User Guide icon and QR codes</strong> &mdash; a new User Guide icon opens
+                    the manual, and SDO and Moon movies and RSS headlines can be opened on your
+                    phone by scanning a QR code</li>
+                <li><strong>Setup and password improvements</strong> &mdash; a show/hide eye icon on
+                    password fields, special characters typed or pasted in the browser now reach
+                    HamClock correctly, and you are told when a paste is too long</li>
+                <li><strong>Message of the Day</strong> icon is always shown, with a status popup when
+                    there is no message</li>
+                <li><strong>Updated User Guide</strong> covering all 4.32 features &mdash; bundled with
+                    this release as <code>HamClockUserGuide.pdf</code></li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
+            <ul>
+                <li>Right-click paste now works in the browser, and clicking Cancel or OK no longer
+                    brings up a stray paste prompt</li>
+                <li>The DE and DX clocks no longer draw over open menus</li>
+                <li>Clicks on the ADS-B badge in the browser are now reliably recognized</li>
+                <li>The browser connection counter no longer shows through text dialogs</li>
+                <li>Fixed an overflowing Cancel button and button centering when labels wrap</li>
+                <li>Fixed a bad index in the Quake pane</li>
+                <li>Fixed the On The Air pane refreshing ADIF data before it was ready</li>
+            </ul>
+
+            <h3><span class="badge badge-new">New</span> Launcher Changes</h3>
+            <ul>
+                <li><strong>HamClock&rsquo;s built-in updater is turned off</strong>
+                    (<code>NO_UPGRADE</code>). HamClock no longer checks for or offers to install
+                    new versions. Its updater rebuilds HamClock from source, which doesn&rsquo;t work
+                    inside the signed Mac app and could stop it from opening. New HamClock versions
+                    will continue to arrive as new HamClock Launcher releases</li>
+                <li><strong>Reboot computer and Shutdown computer are removed</strong> from
+                    HamClock&rsquo;s shutdown menu (<code>NO_SYSTEM_CONTROLS</code>). These options are
+                    meant for dedicated devices such as a Raspberry Pi and do not work on a Mac.
+                    Restart HamClock and Exit HamClock are still available</li>
+            </ul>
+
+            <p>HamClock 4.32 also adds an Android and Fire TV version; those changes don&rsquo;t
+               affect the Mac. For the complete list of changes and bug fixes, see the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.32.0" target="_blank">upstream 4.32.0 release notes</a>.</p>
+        </div>
+
+        <!-- v4.31 -->
+        <div class="release">
             <div class="release-header">
                 <h2>Version 4.31</h2>
                 <span class="release-date">August 2026</span>
