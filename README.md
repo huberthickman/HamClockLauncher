@@ -2,7 +2,7 @@
 
 A wxPython-based GUI launcher for [HamClock](https://github.com/openhamclock/hamclock) on macOS, providing an easy-to-use interface for running and monitoring the HamClock web applications. It is distributed as a self-contained, signed and notarized .app with the HamClock binaries included, so no other software needs to be installed to use HamClock.
 
-**Current release: 4.32** (bundles HamClock 4.32). Launcher version numbers match the bundled HamClock version.
+**Current release: 4.33** (bundles HamClock 4.33). Launcher version numbers match the bundled HamClock version.
 
 Website and downloads: [machamclocklauncher.org](https://machamclocklauncher.org)
 
@@ -32,7 +32,7 @@ HamClock development now continues as the [Open HamClock](https://github.com/ope
 - **Browser Integration**: One-click button to open HamClock at `http://localhost:8081/live.html`
 - **Process Control**: Start and stop HamClock with visual status indicators
 - **Safe Shutdown**: Prompts before closing if HamClock is still running
-- **Clear HamClock Cache** (Tools menu): Deletes downloaded data in `~/.hamclock` while preserving your settings (`eeprom`)
+- **Clear HamClock Cache** (Tools menu): Deletes downloaded data in `~/.hamclock` while preserving your settings (`eeprom`). This is gentler than HamClock's own **Factory reset** (in its shutdown menu, new in 4.33), which also erases your settings
 - **Help Resources**: The bundled HamClock User Guide (`HamClockUserGuide.pdf`) and release notes are available from the Help menu
 
 ## Requirements
