@@ -196,8 +196,71 @@
 
     <div class="container">
 
-        <!-- v4.32 -->
+        <!-- v4.33 -->
         <div class="release latest">
+            <div class="release-header">
+                <h2>Version 4.33</h2>
+                <span class="release-date">October 2026</span>
+                <span class="badge badge-hamclock">HamClock 4.33</span>
+            </div>
+
+            <p>This release bundles HamClock <strong>4.33</strong>, which brings new features and
+               bug fixes from the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.33.0" target="_blank">Open HamClock 4.33.0 release</a>.
+               No changes have been made to the launcher itself; this update exists to bundle
+               the new client and its updated User Guide. As in 4.32, the bundled binaries are
+               built with HamClock&rsquo;s updater and the Reboot/Shutdown computer options
+               turned off.</p>
+
+            <h3><span class="badge badge-new">New</span> Highlights from HamClock 4.33</h3>
+            <ul>
+                <li><strong>New Physical map style</strong> &mdash; Physical and Terrain are now
+                    separate map styles, so you can choose either</li>
+                <li><strong>POTA schedules</strong> &mdash; upcoming Parks on the Air activation
+                    schedules can now be shown in HamClock</li>
+                <li><strong>ADS-B on every map</strong> &mdash; aircraft can now be shown on all
+                    map styles and projections</li>
+                <li><strong>Wind view inside HamClock</strong> &mdash; the Wind badge on the map now
+                    opens in an overlay window within HamClock</li>
+                <li><strong>Consistent map badges</strong> &mdash; the on-map buttons now line up
+                    the same way on the Weather and Clouds maps</li>
+                <li><strong>Factory reset</strong> &mdash; a new item in HamClock&rsquo;s shutdown
+                    menu erases all of HamClock&rsquo;s settings and downloaded data and restarts it
+                    with the defaults. Unlike the launcher&rsquo;s <em>Tools &rarr; Clear HamClock
+                    Cache</em>, this also erases your settings, so you will go through Setup again</li>
+                <li><strong>On The Air pane</strong> &mdash; the organization filter labels are now
+                    colored to match their park colors on the map</li>
+                <li><strong>Easier to tap</strong> &mdash; the whole DE header area, up to the time
+                    zone box, now responds to taps and clicks</li>
+                <li><strong>Nearby APRS stations</strong> are now available from HamClock&rsquo;s
+                    web API, for those who script against it</li>
+                <li><strong>Updated User Guide</strong> covering all 4.33 features &mdash; bundled with
+                    this release as <code>HamClockUserGuide.pdf</code></li>
+            </ul>
+
+            <h3><span class="badge badge-fix">Fix</span> Notable Bug Fixes</h3>
+            <ul>
+                <li>Decimal points, minus signs and the Delete key now work correctly when entering
+                    a latitude or longitude, including from the browser</li>
+                <li>Corrected the wind speed units in the weather display</li>
+                <li>HamClock no longer crashes when its saved DXpeditions or Contests data is empty</li>
+                <li>Tapping an indented menu item no longer turns on an unrelated item, and the
+                    parent selection now stays in step with its sub-items</li>
+                <li>The On The Air list no longer jumps back to the top while you are scrolling it</li>
+                <li>Expired NCDXF beacon markers are now cleared from the map</li>
+                <li>The DX marker no longer goes missing when panes rotate</li>
+                <li>Cleaned up drawing leftovers beneath the callsign and fixed several other
+                    display refresh issues</li>
+            </ul>
+
+            <p>HamClock 4.33 also adds Android TV and Google TV support and a Roku viewer; those
+               changes don&rsquo;t affect the Mac. For the complete list of changes and bug fixes,
+               see the
+               <a href="https://github.com/openhamclock/hamclock/releases/tag/v4.33.0" target="_blank">upstream 4.33.0 release notes</a>.</p>
+        </div>
+
+        <!-- v4.32 -->
+        <div class="release">
             <div class="release-header">
                 <h2>Version 4.32</h2>
                 <span class="release-date">September 2026</span>
